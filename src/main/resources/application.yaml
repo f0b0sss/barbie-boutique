@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+#      ddl-auto: create-drop
+      ddl-auto: validate
+#    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/barbi_boutique
+#    url: jdbc:postgresql://localhost:5434/barbi_boutique
+    username: postgres
+    password: qwerty
+#    password: postgres
+
+  flyway:
+    baseline-on-migrate: true
+
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    template-resolver-order: 1
+

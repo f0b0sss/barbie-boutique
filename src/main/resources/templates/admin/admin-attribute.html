@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Attribute</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+<p>filter title</p>
+<form th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
+      th:object="${attribute}" th:method="PUT">
+    <div th:each="entry : ${attribute.attributeTitles.entrySet()}">
+        <div>
+            <label th:for="*{attributeTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+            <input type="text" th:field="*{attributeTitles['__${entry.key.id}__']}"/>
+        </div>
+    </div>
+    <button type="submit">Update attribute</button>
+</form>
+
+</body>
+</html>

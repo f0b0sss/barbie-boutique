@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Filter</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+<p>filter title</p>
+<form th:action="@{/admin/filters/{id}(id=${filter.id})}" th:object="${filter}" th:method="PUT">
+    <div th:each="entry : ${filter.filterTitles.entrySet()}">
+        <div>
+            <label th:for="*{filterTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+            <input type="text" th:field="*{filterTitles['__${entry.key.id}__']}"/>
+        </div>
+    </div>
+    <button type="submit">Update filter title</button>
+</form>
+
+<!--<p>Attributes</p>-->
+<!--<form th:action="@{/admin/filter/{id}/attribute/update(id=${filter.id})}" th:object="${attributes}" th:method="PATCH">-->
+<!--    <div th:each="attribute, stat : ${attributes}">-->
+<!--        <div th:each="entry : ${attribute.attributeTitles.entrySet()}">-->
+<!--            <div>-->
+<!--                <label th:for="${attribute.attributeTitles['__${entry.key.id}__']}"-->
+<!--                       th:text="${entry.key.title}">Language</label>-->
+<!--                <input type="text"-->
+<!--                       th:field="${attributes['__${stat.index}__'].attributeTitles['__${entry.key.id}__']}"/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--</form>-->
+
+
+<p>Attributes</p>
+
+<div th:each="attribute, stat : ${filter.attributes}">
+        <div>
+            <a th:href="@{/admin/filters/{id}/attributes/{att_id}(id=${filter.id}, att_id=${attribute.id})}">
+                <div th:text="${filter.attributes['__${stat.index}__'].attributeTitles['__${language.id}__']}">title</div>
+
+<!--                <label th:for="${attribute.attributeTitles['__${entry.key.id}__']}"-->
+<!--                       th:text="${entry.key.title}">Language</label>-->
+<!--                <input type="text"-->
+<!--                       th:field="${filter.attributes['__${stat.index}__'].attributeTitles['__${entry.key.id}__']}"/>-->
+            </a>
+        </div>
+    <div>
+        <form th:method="DELETE"
+              th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filter.id}, att_id=${attribute.id})}">
+            <input type="submit" value="Удалить attribute">
+        </form>
+    </div>
+</div>
+
+
+<p>Add Attribute</p>
+
+<form th:method="POST" th:action="@{/admin/filters/{id}/attributes(id=${filter.id})}" th:object="${newAttribute}">
+    <input type="text" th:field="${newAttribute.id}" hidden/>
+    <table align="center">
+        <div th:each="entry : ${newAttribute.attributeTitles.entrySet()}">
+            <div>
+                <label th:for="*{attributeTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+                <input type="text" th:field="*{attributeTitles['__${entry.key.id}__']}"/>
+            </div>
+        </div>
+        <tr>
+            <input type="submit" value="Add"/>
+        </tr>
+    </table>
+</form>
+
+
+</body>
+</html>

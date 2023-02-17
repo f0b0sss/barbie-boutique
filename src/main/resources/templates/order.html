@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+
+<table border="1" align="center">
+    <tr>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Sum</th>
+    </tr>
+
+    <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
+    <td th:text="${order.status}">status</td>
+    <td th:text="${order.sum}">sum</td>
+</table>
+
+<hr>
+
+<table border="1" align="center">
+    <tr>
+        <th>Pic</th>
+        <th>name</th>
+        <th>price</th>
+    </tr>
+
+    <tr th:each="detail : ${order.details}">
+        <td>
+            <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
+                 th:alt="${detail.product.productTitles['__${language.id}__']}">
+        </td>
+
+        <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
+        <td th:text="${detail.product.price}">price</td>
+
+        <div th:if="${#strings.equals(order.status, 'NEW')}">
+            <td>
+                <form th:method="DELETE" th:action="@{/orders/{id}/{product_id}(id=${order.id}, product_id=${detail.id})}">
+                    <input type="submit" th:value="#{bucket.button.cancel}">
+                </form>
+            </td>
+        </div>
+    </tr>
+
+</table>
+
+</body>
+</html>

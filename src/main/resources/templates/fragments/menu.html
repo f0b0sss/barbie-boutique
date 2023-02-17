@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+</head>
+<body>
+
+
+<table id="nav-menu" width="100%" align="center">
+    <tr>
+        <td align="center">
+            <table>
+                <tr>
+<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=uk}">ua</a></td>-->
+<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=ru}">ru</a></td>-->
+<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=en}">en</a></td>-->
+                    <td><a th:href="@{?lang=uk}">ua</a></td>
+                    <td><a th:href="@{?lang=ru}">ru</a></td>
+                    <td><a th:href="@{?lang=en}">en</a></td>
+
+
+
+                    <td>Menu -></td>
+                    <td><a th:href="@{/}">[[#{menu.home}]]</a></td>
+                    <td><a th:href="@{/categories}">[[#{menu.categories}]]</a></td>
+                    <td><a th:href="@{/products}">[[#{menu.products}]]</a></td>
+
+
+                    <td sec:authorize="isAuthenticated()">
+                        <a th:href="@{/bucket}">[[#{menu.card}]]</a>
+                    </td>
+                    <td sec:authorize="isAuthenticated()">
+                        <a th:href="@{/orders}">[[#{menu.orders}]]</a>
+
+                    </td>
+
+                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                        <a th:href="@{/admin}">Admin</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td align="right">
+
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    Hello,
+                    <a th:href="@{/users/profile}">
+                        <span sec:authentication="principal.username">Bill</span>
+                    </a>
+                </div>
+                <div>
+                    <a th:href="@{/logout}">Logout</a>
+                </div>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <div>
+                    Hello, Unknown, Please <a th:href="@{/login}">Login</a>
+                </div>
+                <div>
+                    <a th:href="@{/signin}">Sign in</a>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>

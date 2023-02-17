@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+
+<div th:if="${not #lists.isEmpty(orders)}">
+    <table border="1" align="center">
+        <tr>
+            <th>id</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Sum</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">id</td>
+            <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
+            <td th:text="${order.status}">status</td>
+            <td th:text="${order.sum}">sum</td>
+
+            <td>
+                <a th:href="@{/orders/{id}(id=${order.id})}">
+                    Detail
+                </a>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<div th:unless="${not #lists.isEmpty(orders)}">
+    <p>no one orders</p>
+</div>
+
+
+
+</body>
+</html>

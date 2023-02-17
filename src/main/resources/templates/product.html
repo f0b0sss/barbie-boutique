@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="*{product.productTitles['__${language.id}__']}"></title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+
+
+<div>
+    <div>Category</div>
+    <span th:each="category : ${categories}">
+        <a th:href="@{/categories/{id}(id=${category.id})}">
+            <span th:text="*{category.categoryTitles['__${language.id}__']}">categoryTitles</span>
+        </a>
+    </span>
+</div>
+
+<hr>
+
+
+<img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
+     th:alt="${product.productTitles['__${language.id}__']}"><br>
+<br>
+<span th:text="*{product.productTitles['__${language.id}__']}">title</span>
+<br>
+<div>
+    <div>[[#{product.price}]]</div>
+    <input type="text" th:field="${product.price}">
+</div>
+<td><a th:href="@{/products/{id}/card(id=${product.id})}">Add to card</a></td>
+
+<hr>
+<div>
+    <div>Filters:</div>
+    <div th:each="attribute, stat : ${product.attributes}">
+        <div th:each="filter, stat : ${filters}">
+            <div th:each="att : ${filter.attributes}">
+                <div th:if="${attribute.id == att.id}">
+                    <span th:text="${filter.filterTitles['__${language.id}__']}"> </span>
+                    :
+                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<hr>
+<div>
+
+    <div th:each="image, stat : ${images}">
+        <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
+             th:alt="${product.productTitles['__${language.id}__']}"><br>
+    </div>
+
+</div>
+
+<!--<form>-->
+<!--    <form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" th:method="PUT">-->
+<!--</form>-->
+
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Category</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<form th:method="POST" th:action="@{/admin/categories}" th:object="${category}"  enctype="multipart/form-data">
+    <table align="center">
+        <div th:each="entry : ${category.categoryTitles.entrySet()}">
+            <div>
+                <label th:for="*{categoryTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+                <input type="text" th:field="*{categoryTitles['__${entry.key.id}__']}" />
+            </div>
+        </div>
+
+        <div>
+            <div>Image</div>
+            <input type="file" name="file">
+        </div>
+
+        <div>
+            <div>Set Parent</div>
+            <div>
+                <div th:each="category, stat : ${categories}">
+                    <input type="radio" th:field="*{parentCategory}" name="parentCategory" th:value="${categories['__${stat.index}__'].id}">
+                    <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>
+                </div>
+            </div>
+        </div>
+
+
+        <tr>
+            <input type="submit" value="Add"/>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Users</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+    <a th:href="@{/admin/users/new-user}">New User</a>
+</div>
+
+<table border="1">
+    <tr>
+        <td>id</td>
+        <td>firstname</td>
+        <td>lastname</td>
+        <td>email</td>
+        <td>phone</td>
+        <td>role</td>
+        <td>info</td>
+        <td>delete</td>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstname}"></td>
+        <td th:text="${user.lastname}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.phone}"></td>
+        <td th:text="${user.role}"></td>
+        <td><a th:href="@{/admin/users/{id}(id=${user.id})}">info</a></td>
+        <td>
+            <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.id})}">
+                <input type="submit" value="del">
+            </form>
+        </td>
+
+
+    </tr>
+
+
+</table>
+
+
+</body>
+</html>

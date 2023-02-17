@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация про продукт</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" th:method="PUT"
+      enctype="multipart/form-data">
+    <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
+         th:alt="${product.productTitles['__${language.id}__']}"><br>
+    <!--    <input type="text" th:field="${product.previewImage}" hidden>-->
+    <!--    <input type="text" th:field="${product.createdDate}" hidden>-->
+
+    <div th:each="entry : ${product.productTitles.entrySet()}">
+        <div>
+            <label th:for="*{productTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+            <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"/>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div>Цена</div>
+        <input type="text" th:field="${product.price}">
+    </div>
+    <br>
+    <div>
+        <div>Category</div>
+
+        <!--        <div th:each="category, stat : ${allCategories}">-->
+        <!--            <input type="checkbox" th:field="${product.categories['__${stat.index}__'].id}" name="categories"-->
+        <!--                   th:value="${category.id}">-->
+        <!--            <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>-->
+        <!--        </div>-->
+
+        <div th:each="category, stat : ${allCategories}">
+            <input type="checkbox" th:field="*{categories}" name="categories"
+                   th:value="${category.id}">
+            <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div>Filters:</div>
+        <div th:each="filter, stat : ${filters}">
+            <div th:text="${filter.filterTitles['__${language.id}__']}"></div>
+            <div th:each="attribute : ${filter.attributes}">
+                <input type="radio" th:field="${product.attributes['__${stat.index}__']}" name="attribute"
+                       th:value="${attribute.id}">
+                <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div>
+
+        <div th:each="image, stat : ${images}">
+            <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
+                 th:alt="${product.productTitles['__${language.id}__']}"><br>
+            <input type="radio" th:field="${product.previewImage}" name="previewImage" th:value="${image.id}">
+            <a th:href="@{/admin/products/{product_id}/images/{image_id}(product_id=${product.id}, image_id=${image.id})}">Удалить
+                image</a>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div>
+        <div>Add Images</div>
+        <input type="file" name="files" multiple="multiple">
+    </div>
+
+
+    <button type="submit">Update</button>
+</form>
+
+
+<br>
+<!--<div>-->
+
+<!--    <div th:each="image, stat : ${images}">-->
+<!--        <img th:src="@{/image/{id}(id=${image.id})}" height="60px"><br>-->
+<!--        &lt;!&ndash;            <input type="radio" th:field="${product.previewImage.id}" name="previewImage" th:value="${image.id}">&ndash;&gt;-->
+<!--        <form th:method="DELETE"-->
+<!--              th:action="@{/admin/products/{product_id}/images/{image_id}(product_id=${product.id}, image_id=${image.id})}">-->
+<!--            <button type="submit">Удалить image</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+
+</body>
+</html>

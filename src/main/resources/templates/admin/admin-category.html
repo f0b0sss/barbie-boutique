@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category.categoryTitles.get('ru')}">Информация про категорию</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+<div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+    <a th:href="@{/admin/categories/{id}/new-category(id=${category.id})}">New Category</a>
+</div>
+
+<br>
+
+
+<form th:action="@{/admin/categories/{id}(id=${category.id})}" th:object="${category}" th:method="PUT" enctype="multipart/form-data">
+
+    <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
+         th:alt="${category.categoryTitles['__${language.id}__']}">
+    <br>
+
+    <div th:each="entry : ${category.categoryTitles.entrySet()}">
+        <div>
+            <label th:for="*{categoryTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+            <input type="text" th:field="*{categoryTitles['__${entry.key.id}__']}"/>
+        </div>
+    </div>
+    <div>
+        <p>Изменить Логотип</p>
+        <input type="file" name="file">
+    </div>
+
+    <br>
+    <div>
+        <div>parentCategory</div>
+
+        <div>
+            <div th:each="cat, stat : ${categories}">
+                <div th:if="${cat.id != category.id}">
+                    <input type="radio" checked th:field="*{parentCategory.id}" name="parentCategory"
+                           th:value="${categories['__${stat.index}__'].id}">
+                    <span th:text="${cat.categoryTitles['__${language.id}__']}">title</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+
+<div th:each="category : ${subCategories}">
+    <a th:href="@{/admin/categories/{id}(id=${category.id})}">
+        <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
+             th:alt="${category.categoryTitles['__${language.id}__']}">
+        <br>
+        <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
+    </a>
+    <div>
+        <form th:method="DELETE" th:action="@{/admin/categories/{id}(id=${category.id})}">
+            <input type="submit" value="Удалить Категорию">
+        </form>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

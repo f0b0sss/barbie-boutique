@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Filters</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+    <a th:href="@{/admin/new-filter}">New Filter</a>
+</div>
+
+
+<div th:each="filter : ${filters}">
+    <a th:href="@{/admin/filters/{id}(id=${filter.id})}">
+        <span th:text="*{filter.filterTitles['__${language.id}__']}">title</span>
+    </a>
+    <div>
+        <form th:method="DELETE" th:action="@{/admin/filters/{id}(id=${filter.id})}">
+            <input type="submit" value="Удалить Filter">
+        </form>
+    </div>
+</div>
+
+
+
+</body>
+</html>

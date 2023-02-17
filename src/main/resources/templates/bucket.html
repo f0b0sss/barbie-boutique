@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Bucket</title>
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+
+<h2>Your bucket</h2>
+<h3>All sum -> <b th:text="${bucketDTO.sum}">1</b></h3>
+
+<table border="1" align="center">
+    <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Price</th>
+        <th>Sum</th>
+        <th></th>
+    </tr>
+    <tr th:each="detail : ${bucketDTO.bucketDetails}">
+        <td>
+            <a th:href="@{/products/{id}(id=${detail.productId})}">
+                <img th:src="@{/image/{id}(id=${detail.previewImage.id})}" height="60px"
+                     th:alt="${detail.productTitles['__${language.id}__']}">
+            </a>
+        </td>
+        <td th:text="${detail.productTitles['__${language.id}__']}">title</td>
+        <td th:text="${detail.amount}">2</td>
+        <td th:text="${detail.price}">11.0</td>
+        <td th:text="${detail.sum}">22</td>
+        <td>
+            <form th:method="DELETE" th:action="@{/bucket/{id}(id=${detail.productId})}">
+                <input type="submit" th:value="#{bucket.button.delete}">
+            </form>
+        </td>
+    </tr>
+</table>
+
+
+<div th:if="${not #lists.isEmpty(bucketDTO.bucketDetails)}">
+    <div>
+        <form th:method="POST" th:action="@{/orders}">
+            <input type="submit" value="Create Order">
+        </form>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
