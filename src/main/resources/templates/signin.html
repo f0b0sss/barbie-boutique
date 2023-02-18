@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >1
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 
 <head>
-    <title>Registration</title>
+    <title>[[#{registration.title}]]</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 
@@ -11,42 +11,39 @@
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
 
-
-
-
 <div id="mainContainer">
 
     <form th:method="POST" th:action="@{/signin}" th:object="${userDTO}">
-        <label for="firstname">Enter firstname: </label>
+        <label for="firstname">[[#{registration.firstname}]]: </label>
         <input type="text" th:field="*{firstname}" id="firstname"/>
         <div style="color: red" th:if="${#fields.hasErrors('firstname') }" th:errors="*{firstname}">firstname error</div>
 
         <br>
-        <label for="lastname">Enter lastname: </label>
+        <label for="lastname">[[#{registration.lastname}]]: </label>
         <input type="text" th:field="*{lastname}" id="lastname"/>
         <div style="color: red" th:if="${#fields.hasErrors('lastname') }" th:errors="*{lastname}">lastname error</div>
 
         <br>
-        <label for="email">Enter email: </label>
+        <label for="email">[[#{registration.email}]]: </label>
         <input type="email" th:field="*{email}" id="email"/>
         <div style="color: red" th:if="${#fields.hasErrors('email') }" th:errors="*{email}">email error</div>
 
         <br>
-        <label for="phone">Enter phone: </label>
+        <label for="phone">[[#{registration.phone}]]: </label>
         <input type="number" th:field="*{phone}" id="phone"/>
         <div style="color: red" th:if="${#fields.hasErrors('phone') }" th:errors="*{phone}">phone error</div>
 
         <br>
-        <label for="password">Enter password: </label>
+        <label for="password">[[#{registration.password}]]: </label>
         <input type="text" th:field="*{password}" id="password"/>
         <div style="color: red" th:if="${#fields.hasErrors('password') }" th:errors="*{password}">password error</div>
 
         <br>
-        <label for="matchingPassword">Matching Password: </label>
+        <label for="matchingPassword">[[#{registration.matchingPassword}]]: </label>
         <input type="text" th:field="*{matchingPassword}" id="matchingPassword"/>
         <div style="color: red" th:if="${#fields.hasErrors('matchingPassword') }" th:errors="*{matchingPassword}">matchingPassword error</div>
-
-        <input class="" type="submit" value="Create"/>
+        <br>
+        <button type="submit">[[#{registration.create}]]</button>
     </form>
 </div>
 

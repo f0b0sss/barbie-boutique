@@ -43,6 +43,7 @@ public class AuthorizationController {
             return "signin";
         }
 
+
         if (userService.findByEmail(userDTO.getEmail()) != null) {
             bindingResult.rejectValue("email", "user.email", "Email already exists");
             return "signin";

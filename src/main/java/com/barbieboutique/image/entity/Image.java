@@ -25,8 +25,11 @@ public class Image {
     private String originalFileName;
     private Long size;
 
+//    @Lob
+//    private byte[] bytes;
+
     @Lob
-    private byte[] bytes;
+    private String image;
 
     public Long getId() {
         return id;
@@ -68,26 +71,24 @@ public class Image {
         this.size = size;
     }
 
-    public byte[] getBytes() {
-        return bytes;
+    public String getImage() {
+        return image;
     }
 
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(contentType, image.contentType) && Objects.equals(originalFileName, image.originalFileName) && Objects.equals(size, image.size) && Arrays.equals(bytes, image.bytes);
+        Image image1 = (Image) o;
+        return Objects.equals(id, image1.id) && Objects.equals(name, image1.name) && Objects.equals(contentType, image1.contentType) && Objects.equals(originalFileName, image1.originalFileName) && Objects.equals(size, image1.size) && Objects.equals(image, image1.image);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, contentType, originalFileName, size);
-        result = 31 * result + Arrays.hashCode(bytes);
-        return result;
+        return Objects.hash(id, name, contentType, originalFileName, size, image);
     }
 }

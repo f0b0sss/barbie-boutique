@@ -12,9 +12,6 @@
         <td align="center">
             <table>
                 <tr>
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=uk}">ua</a></td>-->
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=ru}">ru</a></td>-->
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=en}">en</a></td>-->
                     <td><a th:href="@{?lang=uk}">ua</a></td>
                     <td><a th:href="@{?lang=ru}">ru</a></td>
                     <td><a th:href="@{?lang=en}">en</a></td>
@@ -45,22 +42,21 @@
 
             <div sec:authorize="isAuthenticated()">
                 <div>
-                    Hello,
                     <a th:href="@{/users/profile}">
-                        <span sec:authentication="principal.username">Bill</span>
+                        <span sec:authentication="principal.username">username</span>
                     </a>
                 </div>
                 <div>
-                    <a th:href="@{/logout}">Logout</a>
+                    <a th:href="@{/logout}">[[#{menu.logout}]]</a>
                 </div>
             </div>
 
             <div sec:authorize="!isAuthenticated()">
                 <div>
-                    Hello, Unknown, Please <a th:href="@{/login}">Login</a>
+                    <a th:href="@{/login}">[[#{menu.login}]]</a>
                 </div>
                 <div>
-                    <a th:href="@{/signin}">Sign in</a>
+                    <a th:href="@{/signin}">[[#{menu.signIn}]]</a>
                 </div>
             </div>
 

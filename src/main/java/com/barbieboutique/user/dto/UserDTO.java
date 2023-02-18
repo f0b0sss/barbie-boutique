@@ -2,6 +2,7 @@ package com.barbieboutique.user.dto;
 
 
 import com.barbieboutique.user.entity.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,7 @@ public class UserDTO {
     private Long id;
 
     @NotNull
-    @Email(message = "Incorrect email")
+    @Email
     private String email;
 
     @NotNull
@@ -34,7 +35,7 @@ public class UserDTO {
     private String matchingPassword;
 
     @NotNull
-    @Size(min = 3, message = "Firstname must be min 3 symbols")
+    @Size(min = 3, message = "{email.notEmpty}")
     private String firstname;
 
     @NotNull
