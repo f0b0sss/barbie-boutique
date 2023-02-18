@@ -33,11 +33,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
 //                .antMatchers("/products").authenticated()
-                .requestMatchers("/admin", "/admin/*").hasAnyAuthority(Role.ADMIN.name(), Role.MANAGER.name())
+                .requestMatchers("/admin", "/admin/**").hasAnyAuthority(Role.ADMIN.name(), Role.SUPERADMIN.name())
+                .requestMatchers("/profile").authenticated()
                 .anyRequest().permitAll()
                 .and()
                     .formLogin()
                     .loginPage("/login")
+                    .defaultSuccessUrl("/profile")
                     .failureUrl("/login-error")
                     .loginProcessingUrl("/auth")
                     .permitAll()
@@ -49,5 +51,16 @@ public class SecurityConfig {
                     .csrf().disable();
         return http.build();
     }
+
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedMethods("*");
+//            }
+//        };
+//    }
 
 }

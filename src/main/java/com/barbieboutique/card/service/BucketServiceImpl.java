@@ -9,6 +9,8 @@ import com.barbieboutique.product.entity.Product;
 import com.barbieboutique.product.repository.ProductRepository;
 import com.barbieboutique.user.entity.User;
 import com.barbieboutique.user.service.UserService;
+import lombok.AllArgsConstructor;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,25 +21,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class BucketServiceImpl implements BucketService{
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService) {
-        this.bucketRepository = bucketRepository;
-        this.productRepository = productRepository;
-        this.userService = userService;
-    }
+
+
+//    @Override
+//    @Transactional
+//    public Bucket createBucket(User user, List<Long> productsId) {
+//        Bucket bucket = new Bucket();
+//        bucket.setUser(user);
+//        List<Product> productList = getCollectRefProductsById(productsId);
+//        bucket.setProducts(productList);
+//        return bucketRepository.save(bucket);
+//    }
 
     @Override
     @Transactional
-    public Bucket createBucket(User user, List<Long> productsId) {
+    public Bucket createBucket(User user) {
         Bucket bucket = new Bucket();
         bucket.setUser(user);
-        List<Product> productList = getCollectRefProductsById(productsId);
+        List<Product> productList = new ArrayList<>();
         bucket.setProducts(productList);
+
         return bucketRepository.save(bucket);
     }
 
@@ -64,6 +74,11 @@ public class BucketServiceImpl implements BucketService{
         User user = userService.findByEmail(email);
 
         BucketDTO bucketDTO = new BucketDTO();
+
+        if (user.getBucket() == null){
+            createBucket(user);
+        }
+
         Map<Long, BucketDetailDTO> mapByProductId = new HashMap<>();
 
         List<Product> products = user.getBucket().getProducts();

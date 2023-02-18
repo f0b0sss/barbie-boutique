@@ -71,7 +71,9 @@ public class ProductController {
         if (principal == null){
             return "redirect:/login";
         }
+
         productService.addToUserCard(id, principal.getName());
+
         return "redirect:/products/" + id;
     }
 

@@ -8,7 +8,7 @@ import com.barbieboutique.user.entity.User;
 import java.util.List;
 
 public interface BucketService {
-    Bucket createBucket(User user, List<Long> productsId);
+    Bucket createBucket(User user);
 
     void addProducts(Bucket bucket, List<Long> productsId);
 

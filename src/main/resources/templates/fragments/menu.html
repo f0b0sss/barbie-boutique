@@ -42,7 +42,7 @@
 
             <div sec:authorize="isAuthenticated()">
                 <div>
-                    <a th:href="@{/users/profile}">
+                    <a th:href="@{/profile}">
                         <span sec:authentication="principal.username">username</span>
                     </a>
                 </div>
