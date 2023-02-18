@@ -48,6 +48,19 @@ public class Utils {
     private Image convertMultipartToImage(MultipartFile file) {
         Image image = null;
 
+//                try {
+//            image = Image.builder()
+//                    .name(file.getName())
+//                    .originalFileName(file.getOriginalFilename())
+//                    .contentType(file.getContentType())
+//                    .size(file.getSize())
+//                    .image(Base64.getEncoder().encodeToString(file.getBytes()))
+////                    .bytes(file.getBytes())
+//                    .build();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         try {
             image = Image.builder()
                     .name(file.getName())
