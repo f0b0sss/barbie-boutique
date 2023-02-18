@@ -22,28 +22,27 @@ public class UserDTO {
     @NotNull
     private Long id;
 
-    @NotNull
+    @NotNull(message = "{email.NotNull}")
     @Email
     private String email;
 
-    @NotNull
-    @Size(min = 6, message = "Password must be min 6 symbols")
+    @NotNull(message = "{password.NotNull}")
+    @Size(min = 6, message = "{password.Size}")
     private String password;
 
-    @NotNull
-    @Size(min = 6, message = "Password must be min 6 symbols")
+    @NotNull(message = "{matchingPassword.NotNull}")
     private String matchingPassword;
 
-    @NotNull
-    @Size(min = 3, message = "{email.notEmpty}")
+    @NotNull(message = "{firstname.NotNull}")
+    @Size(min = 2, message = "{firstname.Size}")
     private String firstname;
 
-    @NotNull
-    @Size(min = 3, message = "Lastname must be min 3 symbols")
+    @NotNull(message = "{lastname.NotNull}")
+    @Size(min = 2, message = "{lastname.Size}")
     private String lastname;
 
-    @NotNull
-    @Size(min = 3, message = "Phone must be min 10 symbols")
+    @NotNull(message = "{phone.NotNull}")
+    @Size(min = 10, message = "{phone.Size}")
     private String phone;
 
     private Role role;

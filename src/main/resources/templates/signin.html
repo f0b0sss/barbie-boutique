@@ -30,7 +30,7 @@
 
         <br>
         <label for="phone">[[#{registration.phone}]]: </label>
-        <input type="number" th:field="*{phone}" id="phone"/>
+        <input type="number" th:field="*{phone}" id="phone">
         <div style="color: red" th:if="${#fields.hasErrors('phone') }" th:errors="*{phone}">phone error</div>
 
         <br>

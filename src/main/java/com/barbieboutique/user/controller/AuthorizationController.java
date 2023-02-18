@@ -45,12 +45,12 @@ public class AuthorizationController {
 
 
         if (userService.findByEmail(userDTO.getEmail()) != null) {
-            bindingResult.rejectValue("email", "user.email", "Email already exists");
+            bindingResult.rejectValue("email", "user.email", "{email.exist}");
             return "signin";
         }
 
         if (!Objects.equals(userDTO.getPassword(), userDTO.getMatchingPassword())) {
-            bindingResult.rejectValue("matchingPassword", "user.matchingPassword", "Password is not equals");
+            bindingResult.rejectValue("matchingPassword", "user.matchingPassword", "{password.matchingPassword}");
             return "signin";
         }
 
