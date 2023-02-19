@@ -5,7 +5,6 @@ import com.barbieboutique.exceptions.PasswordsNotEqualsException;
 import com.barbieboutique.exceptions.UserAlreadyExistException;
 import com.barbieboutique.user.dao.UserRepository;
 import com.barbieboutique.user.dto.UserDTO;
-import com.barbieboutique.user.entity.Role;
 import com.barbieboutique.user.entity.Status;
 import com.barbieboutique.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -27,11 +26,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final VerificationTokenRepository tokenRepository;
 
 
     @Transactional
     @Override
-    public boolean save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException {
+    public User save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException {
 
         if (findByEmail(userDTO.getEmail()) != null){
             throw new UserAlreadyExistException("There is an account with that email address: "
@@ -48,15 +48,15 @@ public class UserServiceImpl implements UserService {
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .phone(userDTO.getPhone())
-                .role(Role.USER)
                 .status(Status.INACTIVE)
                 .build();
 
-        userRepository.save(user);
+//        userRepository.save(user);
 
-        return true;
+        return userRepository.saveAndFlush(user);
+
+//        return true;
     }
-
 
     @Override
     public void save(User user) {
@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
+
         UserDTO userDTO = UserDTO.builder()
                 .id(user.getId())
                 .lastname(user.getLastname())

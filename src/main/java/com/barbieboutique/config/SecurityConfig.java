@@ -32,14 +32,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-//                .antMatchers("/products").authenticated()
                 .requestMatchers("/admin", "/admin/**").hasAnyAuthority(Role.ADMIN.name(), Role.SUPERADMIN.name())
                 .requestMatchers("/profile").authenticated()
                 .anyRequest().permitAll()
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/profile")
+                    .defaultSuccessUrl("/")
                     .failureUrl("/login-error")
                     .loginProcessingUrl("/auth")
                     .permitAll()

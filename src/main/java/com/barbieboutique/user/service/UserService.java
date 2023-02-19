@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    boolean save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException;
+    User save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException;
 
     void save(User user);
 
@@ -21,4 +21,5 @@ public interface UserService extends UserDetailsService {
     UserDTO getById(Long id);
 
     void updateProfile(UserDTO userDTO);
+
 }

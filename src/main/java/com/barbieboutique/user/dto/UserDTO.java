@@ -1,10 +1,11 @@
 package com.barbieboutique.user.dto;
 
 
+import com.barbieboutique.user.dto.customValidators.ValidEmail;
 import com.barbieboutique.user.entity.Role;
-
-import com.barbieboutique.user.entity.customValidators.ValidEmail;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,9 +43,9 @@ public class UserDTO {
     @Size(min = 2, message = "{lastname.Size}")
     private String lastname;
 
-    @NotNull(message = "{phone.NotNull}")
-    @NotBlank(message = "{phone.NotBlank}")
-    @Size(min = 10, message = "{phone.Size}")
+//    @NotNull(message = "{phone.NotNull}")
+//    @NotBlank(message = "{phone.NotBlank}")
+//    @Size(min = 10, message = "{phone.Size}")
     private String phone;
 
     private Role role;

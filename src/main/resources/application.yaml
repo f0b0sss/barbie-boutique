@@ -24,3 +24,21 @@ spring:
     prefix: file:src/main/resources/templates/
     template-resolver-order: 1
 
+#Email config
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dmitriy3imin@gmail.com
+    password: utsasxtexonnsbxb
+#    test-connection: true
+#    protocol: smtp
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
+#          timeout: 8000
+#          ssl:
+#            trust: smtp.gmail.com

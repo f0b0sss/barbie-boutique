@@ -9,6 +9,9 @@
 
 <p th:if="${loginError}" class="error">wrong name or password</p>
 
+<div th:if="${param.error != null}"
+     th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
+
 <form th:action="@{/auth}" method="post">
   <table border="1">
     <tr>

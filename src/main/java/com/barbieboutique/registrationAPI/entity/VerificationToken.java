@@ -1,5 +1,6 @@
-package com.barbieboutique.user.entity;
+package com.barbieboutique.registrationAPI.entity;
 
+import com.barbieboutique.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,18 @@ public class VerificationToken {
 
     private Date expiryDate;
 
+    public VerificationToken(String token, User user) {
+        this.token = token;
+        this.user = user;
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
+    }
+
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
+
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+
         return new Date(cal.getTime().getTime());
     }
 

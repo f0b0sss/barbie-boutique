@@ -1,4 +1,4 @@
-package com.barbieboutique.user.entity.customValidators;
+package com.barbieboutique.user.dto.customValidators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

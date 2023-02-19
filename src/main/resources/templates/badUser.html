@@ -1,13 +1,22 @@
+<html>
+<body>
+
+<!--<a th:href="@{/registration.html}"-->
+<!--   th:text="#{label.form.loginSignUp}">signup</a>-->
+
+</body>
+</html>
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Activation</title>
+    <title>[[#{badUser.title}]]</title>
 </head>
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
-<h1>Activation</h1>
+<h1 th:text="${message}">Error Message</h1>
 
 </body>
 </html>
