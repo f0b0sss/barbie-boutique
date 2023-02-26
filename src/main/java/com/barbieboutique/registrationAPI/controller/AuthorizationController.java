@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -67,10 +68,11 @@ public class AuthorizationController {
             return "signin";
         }
         try {
-            User registered = userService.save(userDTO);
+            User registeredUser = userService.save(userDTO);
+            Locale locale = LocaleContextHolder.getLocale();
 
             String appUrl = request.getContextPath();
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, LocaleContextHolder.getLocale(), appUrl));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser, locale, appUrl));
         } catch (UserAlreadyExistException e) {
             bindingResult.rejectValue("email", "email.exist",
                     "Email already exists");
@@ -85,12 +87,12 @@ public class AuthorizationController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model) {
+    public String registration() {
         return "registration";
     }
 
     @GetMapping("/registrationConfirm")
-    public String confirmRegistration(Model model, @RequestParam String token) {
+    public String registrationConfirm(Model model, @RequestParam String token) {
         Locale locale = LocaleContextHolder.getLocale();
 
         Token verificationToken = tokenService.getToken(token);
@@ -110,7 +112,9 @@ public class AuthorizationController {
 
             model.addAttribute("message", message);
 
-            return "redirect:/bad-user?lang=" + locale.getLanguage();
+            return "redirect:/token-error?errorCode=" + "auth.message.expired" +
+                    "&lang=" + locale.getLanguage() +
+                    "&token=" + token;
         }
 
         user.setEnabled(true);
@@ -145,15 +149,17 @@ public class AuthorizationController {
 
         String url = request.getRequestURL().toString();
 
-        mailSender.send(constructResetTokenEmail(url, token, user));
+        String message = messages.getMessage("messageEmail.resetPasswordEmail", null, LocaleContextHolder.getLocale());
+        String subject = messages.getMessage("message.resetPassword", null, LocaleContextHolder.getLocale());
+
+        mailSender.send(constructResetTokenEmail(subject, message, url, token, user));
 
         return "redirect:/sent-password";
     }
 
-    private SimpleMailMessage constructResetTokenEmail(String url, String token, User user) {
+    private SimpleMailMessage constructResetTokenEmail(String subject, String message, String url,
+                                                       String token, User user) {
         String link = url + "?token=" + token + "&lang=" + LocaleContextHolder.getLocale();
-        String message = messages.getMessage("messageEmail.resetPasswordEmail", null, LocaleContextHolder.getLocale());
-        String subject = messages.getMessage("message.resetPassword", null, LocaleContextHolder.getLocale());
 
         return constructEmail(subject, message + " \r\n" + link, user);
     }
@@ -180,7 +186,9 @@ public class AuthorizationController {
         Locale locale = LocaleContextHolder.getLocale();
 
         if (result != null) {
-            return "redirect:/update-password-error?errorCode=" + "auth.message." + result + "&lang=" + locale.getLanguage();
+            return "redirect:/update-password-error?errorCode=" + "auth.message." + result +
+                    "&lang=" + locale.getLanguage() +
+                    "&token=" + token;
         } else {
 
             PasswordDto passwordDto = new PasswordDto();
@@ -202,7 +210,9 @@ public class AuthorizationController {
         Locale locale = LocaleContextHolder.getLocale();
 
         if (result != null) {
-            return "redirect:/update-password-error?errorCode=" + "auth.message." + result + "&lang=" + locale.getLanguage();
+            return "redirect:/token-error?errorCode=" + "auth.message." + result +
+                    "&lang=" + locale.getLanguage() +
+                    "&token=" + passwordDto.getToken();
         } else {
             Optional user = tokenService.getUserByToken(passwordDto.getToken());
 
@@ -227,11 +237,56 @@ public class AuthorizationController {
         return "update-password-success";
     }
 
-    @GetMapping("/update-password-error")
-    public String updatePasswordError(Model model, @RequestParam String errorCode) {
+    @GetMapping("/token-error")
+    public String updatePasswordError(Model model, @RequestParam String errorCode, @RequestParam String token) {
         String message = messages.getMessage(errorCode, null, LocaleContextHolder.getLocale());
         model.addAttribute("message", message);
+        model.addAttribute("errorCode", errorCode);
+        model.addAttribute("token", token);
         return "login";
+    }
+
+
+    @PostMapping("/resendToken/{token}")
+    public String resendToken(HttpServletRequest request, Model model, @PathVariable String token) {
+        Locale locale = LocaleContextHolder.getLocale();
+        Token verificationToken = tokenService.getToken(token);
+
+        if (verificationToken == null) {
+            String message = messages.getMessage("auth.message.invalidToken", null, locale);
+
+            model.addAttribute("message", message);
+
+            return "redirect:/bad-user?lang=" + locale.getLanguage();
+        } else {
+            User user = verificationToken.getUser();
+
+            String newToken = UUID.randomUUID().toString();
+
+            userService.createPasswordResetTokenForUser(user, newToken);
+
+            if (user.isEnabled()) {
+                String message = messages.getMessage("messageEmail.resetPasswordEmail", null, locale);
+                String subject = messages.getMessage("message.resetPassword", null, locale);
+
+                String url = request.getRequestURL().toString()
+                        .replace("resendToken/" + token, "update-password");
+
+                mailSender.send(constructResetTokenEmail(subject, message, url, newToken, user));
+
+                return "redirect:/sent-password";
+            } else {
+                String message = messages.getMessage("auth.message.emailTitleConfirmRegister", null, locale);
+                String subject = messages.getMessage("auth.message.regSuccess", null, locale);
+
+                String url = request.getRequestURL().toString()
+                        .replace("resendToken/" + token, "registrationConfirm");
+
+
+                mailSender.send(constructResetTokenEmail(subject, message, url, newToken, user));
+                return "redirect:/registration";
+            }
+        }
     }
 
 }

@@ -28,8 +28,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token getToken(String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken);
+    public Token getToken(String token) {
+        return tokenRepository.findByToken(token);
     }
 
     @Override

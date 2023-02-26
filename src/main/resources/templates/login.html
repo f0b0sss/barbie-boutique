@@ -34,5 +34,12 @@
 <a th:href="@{/reset-password}" th:text="#{message.resetPassword}">reset</a>
 
 
+<div th:if="${errorCode == 'auth.message.expired'}">
+    <form th:action="@{/resendToken/{token}(token=${token})}" method="post">
+        <button type="submit">[[#{button.resendToken}]]</button>
+    </form>
+</div>
+
+
 </body>
 </html>

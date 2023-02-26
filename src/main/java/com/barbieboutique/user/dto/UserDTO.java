@@ -43,9 +43,6 @@ public class UserDTO {
     @Size(min = 2, message = "{lastname.Size}")
     private String lastname;
 
-//    @NotNull(message = "{phone.NotNull}")
-//    @NotBlank(message = "{phone.NotBlank}")
-//    @Size(min = 10, message = "{phone.Size}")
     private String phone;
 
     private Role role;

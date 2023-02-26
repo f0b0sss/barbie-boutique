@@ -54,11 +54,7 @@ public class UserServiceImpl implements UserService {
                 .status(Status.INACTIVE)
                 .build();
 
-//        userRepository.save(user);
-
         return userRepository.saveAndFlush(user);
-
-//        return true;
     }
 
     @Override
