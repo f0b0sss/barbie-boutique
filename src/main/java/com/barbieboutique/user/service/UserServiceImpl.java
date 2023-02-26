@@ -3,7 +3,10 @@ package com.barbieboutique.user.service;
 
 import com.barbieboutique.exceptions.PasswordsNotEqualsException;
 import com.barbieboutique.exceptions.UserAlreadyExistException;
+import com.barbieboutique.registrationAPI.dao.TokenRepository;
+import com.barbieboutique.registrationAPI.entity.Token;
 import com.barbieboutique.user.dao.UserRepository;
+import com.barbieboutique.user.dto.PasswordDto;
 import com.barbieboutique.user.dto.UserDTO;
 import com.barbieboutique.user.entity.Status;
 import com.barbieboutique.user.entity.User;
@@ -26,14 +29,14 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final VerificationTokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
 
 
     @Transactional
     @Override
     public User save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException {
 
-        if (findByEmail(userDTO.getEmail()) != null){
+        if (findByEmail(userDTO.getEmail()) != null) {
             throw new UserAlreadyExistException("There is an account with that email address: "
                     + userDTO.getEmail());
         }
@@ -72,14 +75,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
 
-        UserDTO userDTO = UserDTO.builder()
-                .id(user.getId())
-                .lastname(user.getLastname())
-                .firstname(user.getFirstname())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .role(user.getRole())
-                .build();
+        UserDTO userDTO = toUserDTO(user);
 
         return userDTO;
     }
@@ -123,11 +119,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAll() {
         return userRepository.findAll().stream()
-                .map(this::toDto)
+                .map(this::toUserDTO)
                 .collect(Collectors.toList());
     }
 
-    private UserDTO toDto(User user) {
+    private UserDTO toUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .lastname(user.getLastname())
@@ -154,4 +150,24 @@ public class UserServiceImpl implements UserService {
                 roles
         );
     }
+
+    @Override
+    public void createPasswordResetTokenForUser(User user, String token) {
+        Token myToken = tokenRepository.findByUser(user);
+
+        myToken.setExpiryDate();
+        myToken.setToken(token);
+
+        tokenRepository.save(myToken);
+    }
+    @Override
+    public void changeUserPassword(User user, PasswordDto passwordDto) throws PasswordsNotEqualsException {
+        if (!Objects.equals(passwordDto.getNewPassword(), passwordDto.getMatchingPassword())) {
+            throw new PasswordsNotEqualsException("Passwords don't match");
+        }
+        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+
+        userRepository.save(user);
+    }
+
 }

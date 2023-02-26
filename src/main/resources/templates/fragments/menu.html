@@ -12,10 +12,23 @@
         <td align="center">
             <table>
                 <tr>
-                    <td><a th:href="@{?lang=uk}">ua</a></td>
-                    <td><a th:href="@{?lang=ru}">ru</a></td>
-                    <td><a th:href="@{?lang=en}">en</a></td>
+                    <!--                    <td><a th:href="@{?lang=uk}">ua</a></td>-->
+                    <!--                    <td><a th:href="@{?lang=ru}">ru</a></td>-->
+                    <!--                    <td><a th:href="@{?lang=en}">en</a></td>-->
 
+
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'ua').toUriString()}">ua
+                        </a></td>
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'ru').toUriString()}">ru
+                        </a></td>
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'en').toUriString()}">en
+                        </a></td>
 
 
                     <td>Menu -></td>

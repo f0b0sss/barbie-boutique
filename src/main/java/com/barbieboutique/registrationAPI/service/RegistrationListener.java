@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-    private final VerificationService verificationService;
+    private final TokenService tokenService;
     private final MessageSource messages;
 
     @Autowired
@@ -28,13 +29,17 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
         User user = event.getUser();
+
         String token = UUID.randomUUID().toString();
-        verificationService.createVerificationToken(user, token);
+
+        tokenService.createToken(user, token);
 
         String recipientAddress = user.getEmail();
-        String subject = "Registration Confirmation";
+        String subject = messages.getMessage(
+                "auth.message.emailTitleConfirmRegister", null, LocaleContextHolder.getLocale());
         String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
-        String message = messages.getMessage("auth.message.regSuccess", null, event.getLocale());
+        String message = messages.getMessage(
+                "auth.message.regSuccess", null, LocaleContextHolder.getLocale());
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);

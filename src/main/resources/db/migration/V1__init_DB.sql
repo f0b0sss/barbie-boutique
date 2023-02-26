@@ -10,8 +10,8 @@ CREATE SEQUENCE order_details_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE orders_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE outfit_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE product_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 50;
 CREATE SEQUENCE user_seq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE verification_token_seq START WITH 1 INCREMENT BY 50;
 CREATE TABLE addresses
 (
     id        bigint  NOT NULL,
@@ -175,6 +175,14 @@ CREATE TABLE products
     preview_image_id bigint,
     PRIMARY KEY (id)
 );
+CREATE TABLE token
+(
+    id          bigint NOT NULL,
+    expiry_date timestamp(6),
+    token       varchar(255),
+    user_id     bigint NOT NULL,
+    PRIMARY KEY (id)
+);
 CREATE TABLE user_comments
 (
     comment_id bigint,
@@ -192,14 +200,6 @@ CREATE TABLE users
     phone     varchar(255),
     role      varchar(255),
     status    varchar(255),
-    PRIMARY KEY (id)
-);
-CREATE TABLE verification_token
-(
-    id          bigint NOT NULL,
-    expiry_date timestamp(6),
-    token       varchar(255),
-    user_id     bigint NOT NULL,
     PRIMARY KEY (id)
 );
 ALTER TABLE IF EXISTS filter_attributes
@@ -278,9 +278,9 @@ ALTER TABLE IF EXISTS product_titles_translator
     ADD CONSTRAINT FK5utk7e8g99p75wlbokmqiyh9u FOREIGN KEY (product_id) REFERENCES products;
 ALTER TABLE IF EXISTS products
     ADD CONSTRAINT FKb45ssns0b0258ie8jpiyx532n FOREIGN KEY (preview_image_id) REFERENCES images;
+ALTER TABLE IF EXISTS token
+    ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users;
 ALTER TABLE IF EXISTS user_comments
     ADD CONSTRAINT FKot0wphbhmvik0yib4agch632b FOREIGN KEY (comment_id) REFERENCES users;
 ALTER TABLE IF EXISTS user_comments
     ADD CONSTRAINT FKe3s47o2hhw8lek5clp4lyxiou FOREIGN KEY (user_id) REFERENCES comments;
-ALTER TABLE IF EXISTS verification_token
-    ADD CONSTRAINT FK3asw9wnv76uxu3kr1ekq4i1ld FOREIGN KEY (user_id) REFERENCES users;

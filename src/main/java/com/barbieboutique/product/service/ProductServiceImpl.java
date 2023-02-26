@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final ProductMapper mapper = ProductMapper.MAPPER;
+    private final ProductMapper productMapper = ProductMapper.MAPPER;
 
     private final ProductRepository productRepository;
     private final Utils utils;

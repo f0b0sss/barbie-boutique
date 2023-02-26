@@ -7,12 +7,12 @@ import com.barbieboutique.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.Objects;
@@ -83,40 +83,35 @@ public class UserController {
 
     @PostMapping
     @PostAuthorize("isAuthenticated()")
-    public String update(@Valid UserDTO userDTO, Model model, Principal principal, BindingResult bindingResult) {
+    public String update(@Valid UserDTO userDTO, Principal principal, BindingResult bindingResult) {
 //        if (principal == null || !Objects.equals(principal.getName(), userDTO.getEmail())) {
 //            throw new RuntimeException("You are not authorize");
 //        }
 
-        System.out.println("00");
-
-
-
         if (bindingResult.hasErrors()) {
-            System.out.println("1");
             return "profile";
         }
 
-        if (!Objects.equals(principal.getName(), userDTO.getEmail())){
+        if (!Objects.equals(principal.getName(), userDTO.getEmail())) {
             if (userService.findByEmail(userDTO.getEmail()) != null) {
-                System.out.println("2");
-                bindingResult.rejectValue("email", "email.exist", "Email already exists");
+                bindingResult.rejectValue(
+                        "email",
+                        "email.exist",
+                        "Email already exists");
 
                 return "profile";
             }
         }
 
-        System.out.println("2.5");
-        if (userDTO.getPassword() != null
-                && !userDTO.getPassword().isEmpty()
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()
                 && !Objects.equals(userDTO.getPassword(), userDTO.getMatchingPassword())) {
-            System.out.println("3");
-            bindingResult.rejectValue("matchingPassword", "password.matchingPassword", "Different passwords");
+            bindingResult.rejectValue(
+                    "matchingPassword",
+                    "password.matchingPassword",
+                    "Different passwords");
 
             return "profile";
         }
-
-        System.out.println("4");
 
         userService.updateProfile(userDTO);
 

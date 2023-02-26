@@ -3,6 +3,7 @@ package com.barbieboutique.user.service;
 
 import com.barbieboutique.exceptions.PasswordsNotEqualsException;
 import com.barbieboutique.exceptions.UserAlreadyExistException;
+import com.barbieboutique.user.dto.PasswordDto;
 import com.barbieboutique.user.dto.UserDTO;
 import com.barbieboutique.user.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,4 +23,7 @@ public interface UserService extends UserDetailsService {
 
     void updateProfile(UserDTO userDTO);
 
+    void createPasswordResetTokenForUser(User user, String token);
+
+    void changeUserPassword (User user, PasswordDto passwordDto) throws PasswordsNotEqualsException;
 }

@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VerificationToken {
+public class Token {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -29,7 +29,7 @@ public class VerificationToken {
 
     private Date expiryDate;
 
-    public VerificationToken(String token, User user) {
+    public Token(String token, User user) {
         this.token = token;
         this.user = user;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
@@ -44,4 +44,7 @@ public class VerificationToken {
         return new Date(cal.getTime().getTime());
     }
 
+    public void setExpiryDate() {
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
+    }
 }
