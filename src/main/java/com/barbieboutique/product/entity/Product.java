@@ -35,7 +35,9 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "product_titles_translator",
-            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(
+                    name = "product_id",
+                    referencedColumnName = "id")})
     @MapKeyColumn(name = "code")
     @Column(name = "title")
     private Map<Language, String> productTitles;

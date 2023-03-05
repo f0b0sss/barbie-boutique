@@ -8,9 +8,11 @@
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
-<h1>User profile</h1>
+<h1>[[#{profile.title}]]</h1>
 
-<form th:method="POST" th:action="@{/profile}" th:object="${userDTO}">
+<form th:method="POST" th:action="@{/profile}" th:object="${updateUserDTO}">
+    <input type="text" th:field="*{id}" id="id" hidden/>
+
     <label for="firstname">[[#{profile.firstname}]]: </label>
     <input type="text" th:field="*{firstname}" id="firstname"/>
     <div style="color: red" th:if="${#fields.hasErrors('firstname') }" th:errors="*{firstname}">firstname error</div>
@@ -31,19 +33,10 @@
     <div style="color: red" th:if="${#fields.hasErrors('phone') }" th:errors="*{phone}">phone error</div>
 
     <br>
-    <label for="password">[[#{profile.password}]]: </label>
-    <input type="password" th:field="*{password}" id="password"/>
-    <div style="color: red" th:if="${#fields.hasErrors('password') }" th:errors="*{password}">password error</div>
-
-    <br>
-    <label for="matchingPassword">[[#{profile.matchingPassword}]]: </label>
-    <input type="password" th:field="*{matchingPassword}" id="matchingPassword"/>
-    <div style="color: red" th:if="${#fields.hasErrors('matchingPassword') }" th:errors="*{matchingPassword}">matchingPassword error</div>
-    <br>
     <button type="submit">[[#{profile.save}]]</button>
 </form>
 
-<a th:href="@{/admin/products/new-product}">[[#{profile.editPass}]]</a>
+<a th:href="@{/profile/password}">[[#{profile.editPass}]]</a>
 
 
 
