@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,23 +29,25 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     }
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
+        Locale locale = LocaleContextHolder.getLocale();
         User user = event.getUser();
-
         String token = UUID.randomUUID().toString();
 
         tokenService.createToken(user, token);
 
         String recipientAddress = user.getEmail();
         String subject = messages.getMessage(
-                "auth.message.emailTitleConfirmRegister", null, LocaleContextHolder.getLocale());
-        String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
+                "auth.message.emailTitleConfirmRegister", null, locale);
+        String confirmationUrl = "/registrationConfirm?token=" + token;
         String message = messages.getMessage(
-                "auth.message.regSuccess", null, LocaleContextHolder.getLocale());
+                "auth.message.regSuccess", null, locale);
+
+        String appUrl = messages.getMessage("appUrl", null, locale);
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "\r\n" + "http://localhost:8080" + confirmationUrl);
+        email.setText(message + "\r\n" + appUrl + confirmationUrl);
 
         mailSender.send(email);
     }

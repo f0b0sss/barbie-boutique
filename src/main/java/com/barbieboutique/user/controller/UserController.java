@@ -12,10 +12,8 @@ import com.barbieboutique.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -32,59 +30,16 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     public UserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-
-//    @GetMapping
-//    public String userList(Model model) {
-//        model.addAttribute("users", userService.getAll());
-//        return "userList";
-//    }
-
-//    @PreAuthorize("hasAuthority('ADMIN')")
-//    @GetMapping("/new")
-//    public String newUser(Model model) {
-//        System.out.println("called method newUser");
-//        model.addAttribute("user", new UserDTO());
-//        return "user";
-//    }
-
-//    @PostAuthorize("isAuthenticated() and #username == authentication.principal.username")
-//    @GetMapping("/{name}/roles")
-//    @ResponseBody
-//    public String getRoles(@PathVariable("email") String email) {
-//        System.out.println("called method getRoles");
-//        User byEmail = userService.findByEmail(email);
-//        return byEmail.getRole().name();
-//    }
-
-//    @PostMapping("/new")
-//    public String saveUser(UserDTO userDTO, Model model) {
-//        if (userService.save(userDTO)) {
-//            return "redirect:/users";
-//        } else {
-//            model.addAttribute("user", userDTO);
-//            return "user";
-//        }
-//    }
-
     @GetMapping
     @PostAuthorize("isAuthenticated()")
     public String profile(Model model, Principal principal) {
-        if (principal == null) {
-            throw new RuntimeException("You are not authorize");
-        }
         User user = userService.findByEmail(principal.getName());
 
         UpdateUserDTO updateUserDTO = UpdateUserDTO.builder()
@@ -140,19 +95,17 @@ public class UserController {
 
         User user = userService.findByEmail(principal.getName());
 
-
         try {
             userService.updatePassword(user, passwordDto);
         } catch (PasswordsNotEqualsException e) {
             bindingResult.rejectValue("matchingPassword", "password.matchingPassword",
                     "Passwords don't match");
             return "edit-password";
-        } catch (WrongOldPasswordException e){
+        } catch (WrongOldPasswordException e) {
             bindingResult.rejectValue("oldPassword", "password.oldPassword",
                     "Passwords don't match");
             return "edit-password";
         }
-
 
         return "redirect:/profile";
     }

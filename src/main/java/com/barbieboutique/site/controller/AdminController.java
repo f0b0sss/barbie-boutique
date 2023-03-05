@@ -1,4 +1,4 @@
-package com.barbieboutique.controller;
+package com.barbieboutique.site.controller;
 
 
 import com.barbieboutique.category.service.CategoryService;

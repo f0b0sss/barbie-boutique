@@ -6,13 +6,14 @@ import com.barbieboutique.exceptions.UserAlreadyExistException;
 import com.barbieboutique.exceptions.UserNotFoundException;
 import com.barbieboutique.registrationAPI.entity.OnRegistrationCompleteEvent;
 import com.barbieboutique.registrationAPI.entity.Token;
+import com.barbieboutique.registrationAPI.service.AuthorizationService;
 import com.barbieboutique.registrationAPI.service.TokenService;
+import com.barbieboutique.site.entity.Notification;
 import com.barbieboutique.user.dto.PasswordDto;
 import com.barbieboutique.user.dto.UserDTO;
 import com.barbieboutique.user.entity.Role;
 import com.barbieboutique.user.entity.Status;
 import com.barbieboutique.user.entity.User;
-import com.barbieboutique.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,10 +40,15 @@ import java.util.UUID;
 @Controller
 @AllArgsConstructor
 public class AuthorizationController {
-    private final TokenService tokenService;
-    private final UserService userService;
-    private final ApplicationEventPublisher eventPublisher;
-    private final MessageSource messages;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private MessageSource messages;
+    @Autowired
+    private AuthorizationService authorizationService;
+
     @Autowired
     private JavaMailSender mailSender;
 
@@ -62,13 +69,14 @@ public class AuthorizationController {
         return "signin";
     }
 
+    @Transactional
     @PostMapping("/registration")
-    public String registration(@Valid UserDTO userDTO, HttpServletRequest request, BindingResult bindingResult) {
+    public String registration(HttpServletRequest request, @Valid UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "signin";
         }
         try {
-            User registeredUser = userService.save(userDTO);
+            User registeredUser = authorizationService.save(userDTO);
             Locale locale = LocaleContextHolder.getLocale();
 
             String appUrl = request.getContextPath();
@@ -83,14 +91,27 @@ public class AuthorizationController {
             return "signin";
         }
 
-        return "redirect:/registration";
+        return "redirect:/registration-success";
     }
 
-    @GetMapping("/registration")
-    public String registration() {
-        return "registration";
+    @GetMapping("/registration-success")
+    public String registrationNotification(Model model) {
+        Locale locale = LocaleContextHolder.getLocale();
+
+        String title = messages.getMessage("auth.message.regSuccess", null, locale);
+        String header = messages.getMessage("auth.message.regSuccess", null, locale);
+        String message = messages.getMessage("auth.message.sendToken", null, locale);
+
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setHeader(header);
+        notification.setMessage(message);
+
+        model.addAttribute("notification", notification);
+        return "notification";
     }
 
+    @Transactional
     @GetMapping("/registrationConfirm")
     public String registrationConfirm(Model model, @RequestParam String token) {
         Locale locale = LocaleContextHolder.getLocale();
@@ -120,14 +141,34 @@ public class AuthorizationController {
         user.setEnabled(true);
         user.setStatus(Status.ACTIVE);
         user.setRole(Role.USER);
-        userService.save(user);
+        authorizationService.save(user);
 
         return "redirect:/login?lang=" + locale.getLanguage();
     }
 
     @GetMapping("/bad-user")
-    public String badUser() {
-        return "bad-user";
+    public String badUserNotification(Model model) {
+        Locale locale = LocaleContextHolder.getLocale();
+
+        String title = messages.getMessage("badUser.title", null, locale);
+        String message = messages.getMessage("badUser.message", null, locale);
+
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setMessage(message);
+
+        model.addAttribute("notification", notification);
+        return "notification";
+    }
+
+    @GetMapping("/token-error")
+    public String updatePasswordError(Model model, @RequestParam String errorCode, @RequestParam String token) {
+        String message = messages.getMessage(errorCode, null, LocaleContextHolder.getLocale());
+        model.addAttribute("message", message);
+        model.addAttribute("errorCode", errorCode);
+        model.addAttribute("token", token);
+
+        return "login";
     }
 
     @GetMapping("/reset-password")
@@ -135,17 +176,17 @@ public class AuthorizationController {
         return "reset-password";
     }
 
-
+    @Transactional
     @PostMapping("/update-password")
     public String reset(HttpServletRequest request, @RequestParam String email) throws UserNotFoundException {
-        User user = userService.findByEmail(email);
+        User user = authorizationService.findByEmail(email);
 
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
         String token = UUID.randomUUID().toString();
 
-        userService.createPasswordResetTokenForUser(user, token);
+        authorizationService.createPasswordResetTokenForUser(user, token);
 
         String url = request.getRequestURL().toString();
 
@@ -175,8 +216,18 @@ public class AuthorizationController {
     }
 
     @GetMapping("/sent-password")
-    public String sentPassword() {
-        return "sent-password";
+    public String sentPasswordNotification(Model model) {
+        Locale locale = LocaleContextHolder.getLocale();
+
+        String title = messages.getMessage("auth.passwordUpdate.title", null, locale);
+        String message = messages.getMessage("message.sentLink", null, locale);
+
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setMessage(message);
+
+        model.addAttribute("notification", notification);
+        return "notification";
     }
 
     @GetMapping("/update-password")
@@ -200,6 +251,7 @@ public class AuthorizationController {
         }
     }
 
+    @Transactional
     @PostMapping("/updatePassword")
     public String updating(@Valid PasswordDto passwordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -218,7 +270,7 @@ public class AuthorizationController {
 
             if (user.isPresent()) {
                 try {
-                    userService.changeUserPassword((User) user.get(), passwordDto);
+                    authorizationService.changeUserPassword((User) user.get(), passwordDto);
                 } catch (PasswordsNotEqualsException e) {
                     bindingResult.rejectValue("matchingPassword", "password.matchingPassword",
                             "Passwords don't match");
@@ -233,20 +285,21 @@ public class AuthorizationController {
     }
 
     @GetMapping("/update-password-success")
-    public String updatePasswordSuccess() {
-        return "update-password-success";
+    public String updatePasswordSuccessNotification(Model model) {
+        Locale locale = LocaleContextHolder.getLocale();
+
+        String title = messages.getMessage("auth.passwordUpdate.title", null, locale);
+        String header = messages.getMessage("auth.passwordUpdated.success", null, locale);
+
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setMessage(header);
+
+        model.addAttribute("notification", notification);
+        return "notification";
     }
 
-    @GetMapping("/token-error")
-    public String updatePasswordError(Model model, @RequestParam String errorCode, @RequestParam String token) {
-        String message = messages.getMessage(errorCode, null, LocaleContextHolder.getLocale());
-        model.addAttribute("message", message);
-        model.addAttribute("errorCode", errorCode);
-        model.addAttribute("token", token);
-        return "login";
-    }
-
-
+    @Transactional
     @PostMapping("/resendToken/{token}")
     public String resendToken(HttpServletRequest request, Model model, @PathVariable String token) {
         Locale locale = LocaleContextHolder.getLocale();
@@ -263,7 +316,7 @@ public class AuthorizationController {
 
             String newToken = UUID.randomUUID().toString();
 
-            userService.createPasswordResetTokenForUser(user, newToken);
+            authorizationService.createPasswordResetTokenForUser(user, newToken);
 
             if (user.isEnabled()) {
                 String message = messages.getMessage("messageEmail.resetPasswordEmail", null, locale);
@@ -282,8 +335,8 @@ public class AuthorizationController {
                 String url = request.getRequestURL().toString()
                         .replace("resendToken/" + token, "registrationConfirm");
 
-
                 mailSender.send(constructResetTokenEmail(subject, message, url, newToken, user));
+
                 return "redirect:/registration";
             }
         }

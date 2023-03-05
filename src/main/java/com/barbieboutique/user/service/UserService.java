@@ -13,23 +13,12 @@ import java.util.List;
 
 //public interface UserService extends UserDetailsService {
 public interface UserService {
-    User save(UserDTO userDTO) throws UserAlreadyExistException, PasswordsNotEqualsException;
-
-    void save(User user);
-
-    void updateData(UpdateUserDTO updateUserDTO) throws UserAlreadyExistException;
-
     List<UserDTO> getAll();
-
-    User findByEmail(String email);
 
     UserDTO getById(Long id);
 
-//    void updateProfile(UserDTO userDTO);
+    User findByEmail(String email);
+    void updateData(UpdateUserDTO updateUserDTO) throws UserAlreadyExistException;
 
-    void createPasswordResetTokenForUser(User user, String token);
-
-    void changeUserPassword (User user, PasswordDto passwordDto) throws PasswordsNotEqualsException;
-
-    void updatePassword(User user, PasswordDto passwordDto)throws PasswordsNotEqualsException, WrongOldPasswordException;
+    void updatePassword(User user, PasswordDto passwordDto) throws PasswordsNotEqualsException, WrongOldPasswordException;
 }

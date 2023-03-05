@@ -19,7 +19,7 @@
 
                     <td>
                         <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
-                           th:href="${urlBuilder.replaceQueryParam('lang', 'ua').toUriString()}">ua
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'uk').toUriString()}">ua
                         </a></td>
                     <td>
                         <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
@@ -45,7 +45,7 @@
 
                     </td>
 
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin}">Admin</a>
                     </td>
                 </tr>
