@@ -15,17 +15,20 @@
 
 
 <ul th:each="status : ${orderStatuses}">
-    <li><a th:href="@{/admin/orders(status=${status})}" th:text="${status}">link</a></li>
-</ul>
+<!--    <li th:if="${not #strings.equals(status, 'NEW')}">-->
+    <li>
+        <a th:href="@{/admin/orders(status=${status})}" th:text="${status}">link</a>
+    </li>
 
+</ul>
 
 <hr>
 <table border="1" align="center">
     <tr>
-        <th>id</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Sum</th>
+        <th>[[#{order.table.row.Order}]]</th>
+        <th>[[#{order.table.row.CreatedDate}]]</th>
+        <th>[[#{order.table.row.Status}]]</th>
+        <th>[[#{order.table.row.Sum}]]</th>
         <th></th>
     </tr>
     <span th:unless="${#lists.isEmpty(orders)}">
@@ -37,7 +40,7 @@
 
             <td>
                 <a th:href="@{/admin/orders/{id}(id=${order.id})}">
-                    Detail
+                     [[#{order.details}]]
                 </a>
             </td>
         </tr>

@@ -9,15 +9,13 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 
-
-
 <form th:action="@{/admin/orders/{id}(id=${order.id})}" th:object="${order}" th:method="PUT">
     <table border="1" align="center">
         <tr>
-            <th>User</th>
-            <th>Created Date</th>
-            <th>Sum</th>
-            <th>Status</th>
+            <th>[[#{order.table.row.User}]]</th>
+            <th>[[#{order.table.row.CreatedDate}]]</th>
+            <th>[[#{order.table.row.Sum}]]</th>
+            <th>[[#{order.table.row.Status}]]</th>
         </tr>
 
         <td>
@@ -39,13 +37,14 @@
 
     <table border="1" align="center">
         <tr>
-            <th>Pic</th>
-            <th>name</th>
-            <th>id</th>
-            <th>price</th>
+            <th>[[#{order.table.row.ProductId}]]</th>
+            <th></th>
+            <th>[[#{order.table.row.ProductName}]]</th>
+            <th>[[#{order.table.row.ProductPrice}]]</th>
         </tr>
 
         <tr th:each="detail : ${order.details}">
+            <td th:text="${detail.product.id}">product.id</td>
             <td>
                 <a th:href="@{/products/{id}(id=${detail.product.id})}">
                     <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
@@ -54,7 +53,6 @@
             </td>
 
             <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
-            <td th:text="${detail.product.id}">product.id</td>
             <td th:text="${detail.product.price}">price</td>
         </tr>
     </table>
@@ -63,9 +61,10 @@
 
     <div>Status</div>
     <div th:each="status : ${orderStatuses}">
-        <input type="radio" th:field="${order.status}" name="status"
-               th:value="${status}">
-        <span th:text="${status}">title</span>
+        <span th:if="${order.status.name() != 'NEW'}">
+            <input type="radio" th:field="${order.status}" name="status" th:value="${status}">
+            <span th:text="${status}">title</span>
+        </span>
     </div>
 
     <input type="submit" th:value="Обновить">

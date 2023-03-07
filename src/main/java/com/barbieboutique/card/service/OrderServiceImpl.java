@@ -1,10 +1,7 @@
 package com.barbieboutique.card.service;
 
 
-import com.barbieboutique.card.entity.Bucket;
-import com.barbieboutique.card.entity.Order;
-import com.barbieboutique.card.entity.OrderDetails;
-import com.barbieboutique.card.entity.OrderStatus;
+import com.barbieboutique.card.entity.*;
 import com.barbieboutique.card.repository.BucketRepository;
 import com.barbieboutique.card.repository.OrderRepository;
 import lombok.AllArgsConstructor;
@@ -102,5 +99,12 @@ public class OrderServiceImpl implements OrderService {
         order.setDetails(orderDetails);
 
         orderRepository.save(order);
+    }
+
+    @Override
+    public void sendOrderDetailsToEmail(Delivery delivery) {
+
+
+
     }
 }

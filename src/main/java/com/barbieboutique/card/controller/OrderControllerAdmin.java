@@ -50,7 +50,7 @@ public class OrderControllerAdmin {
     public String update(@ModelAttribute Order order, @PathVariable Long id) {
         orderService.updateStatus(order.getStatus(), id);
 
-        return "redirect:/admin/orders?status=NEW";
+        return "redirect:/admin/orders?status=CREATED";
     }
 
 

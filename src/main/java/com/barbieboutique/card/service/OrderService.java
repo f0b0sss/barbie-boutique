@@ -2,6 +2,7 @@ package com.barbieboutique.card.service;
 
 
 import com.barbieboutique.card.entity.Bucket;
+import com.barbieboutique.card.entity.Delivery;
 import com.barbieboutique.card.entity.Order;
 import com.barbieboutique.card.entity.OrderStatus;
 
@@ -23,6 +24,8 @@ public interface OrderService {
     void deleteById(Long id);
 
     void deleteProductFromOrder(Order order, Long product_id);
+
+    void sendOrderDetailsToEmail(Delivery delivery);
 
 
 

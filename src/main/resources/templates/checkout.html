@@ -2,7 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>[[#{menu.orders}]]</title>
+    <title>[[#{order.checkout}]]</title>
+
 </head>
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
@@ -10,16 +11,12 @@
 <table border="1" align="center">
     <tr>
         <th>[[#{order.table.row.CreatedDate}]]</th>
-        <th>[[#{order.table.row.Status}]]</th>
         <th>[[#{order.table.row.Sum}]]</th>
     </tr>
 
     <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
-    <td th:text="${order.status}">status</td>
     <td th:text="${order.sum}">sum</td>
 </table>
-
-<hr>
 
 <table border="1" align="center">
     <tr>
@@ -41,8 +38,37 @@
         <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
         <td th:text="${detail.product.price}">price</td>
 
+        <div th:if="${#strings.equals(order.status, 'NEW')}">
+            <td>
+                <form th:method="DELETE"
+                      th:action="@{/orders/{id}/{product_id}(id=${order.id}, product_id=${detail.id})}">
+                    <input type="submit" th:value="#{bucket.button.cancel}">
+                </form>
+            </td>
+        </div>
     </tr>
 </table>
+
+<div>
+    <form th:method="POST" th:action="@{/orders/{id}/checkout(id=${order.id})}" th:object="${delivery}">
+
+<!--        <fieldset>-->
+<!--            <legend>[[#{checkout.delivery.method}]]</legend>-->
+<!--            <div>-->
+<!--                <input type="radio" th:field="*{delivery.postMethod}" id="postMethod" name="novaPoshta"-->
+<!--                       th:value="" checked>-->
+<!--                <span th:text="#{checkout.delivery.method.novaPoshta}">title</span>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <input type="radio" th:field="*{delivery.postMethod}" id="postMethod" name="ukrPoshta"-->
+<!--                       th:value="" checked>-->
+<!--                <span th:text="#{checkout.delivery.method.ukrPoshta}">title</span>-->
+<!--            </div>-->
+<!--        </fieldset>-->
+
+        <input type="submit" th:value="#{order.checkout}">
+    </form>
+</div>
 
 
 </body>

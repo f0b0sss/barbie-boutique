@@ -1,4 +1,3 @@
-CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE attribute_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE bucket_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE category_seq START WITH 1 INCREMENT BY 1;
@@ -12,16 +11,7 @@ CREATE SEQUENCE outfit_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE product_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 50;
 CREATE SEQUENCE user_seq START WITH 1 INCREMENT BY 1;
-CREATE TABLE addresses
-(
-    id        bigint  NOT NULL,
-    apartment integer NOT NULL,
-    city      varchar(255),
-    country   varchar(255),
-    street    varchar(255),
-    user_id   bigint,
-    PRIMARY KEY (id)
-);
+
 CREATE TABLE attribute_titles_translator
 (
     attribute_id         bigint NOT NULL,
@@ -201,8 +191,6 @@ ALTER TABLE IF EXISTS outfit_images
     ADD CONSTRAINT UK_fav00mhnbmkpytcxcmdkyy9eu UNIQUE (image_id);
 ALTER TABLE IF EXISTS product_images
     ADD CONSTRAINT UK_faiw41ddc6nywa21m1nodqvy5 UNIQUE (image_id);
-ALTER TABLE IF EXISTS addresses
-    ADD CONSTRAINT FK1fa36y2oqhao3wgg2rw1pi459 FOREIGN KEY (user_id) REFERENCES users;
 ALTER TABLE IF EXISTS attribute_titles_translator
     ADD CONSTRAINT FKampc32swy3s8gi2v38nxwiq2o FOREIGN KEY (attribute_titles_key) REFERENCES language;
 ALTER TABLE IF EXISTS attribute_titles_translator

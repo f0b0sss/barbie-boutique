@@ -3,7 +3,7 @@ package com.barbieboutique.card.entity;
 import java.time.LocalDateTime;
 
 public enum OrderStatus {
-    NEW, APPROVED, SENT, CANCELED, COMPLETE;
+    NEW, CREATED, APPROVED, SENT, CANCELED, COMPLETE;
 
     private LocalDateTime date;
 

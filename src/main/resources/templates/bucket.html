@@ -7,19 +7,21 @@
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
-<h2>Your bucket</h2>
+<h2>[[#{bucket.titlePage}]]</h2>
 <h3>All sum -> <b th:text="${bucketDTO.sum}">1</b></h3>
 
 <table border="1" align="center">
     <tr>
-        <th>Image</th>
-        <th>Title</th>
-        <th>Amount</th>
-        <th>Price</th>
-        <th>Sum</th>
+        <th>[[#{order.table.row.ProductId}]]</th>
+        <th></th>
+        <th>[[#{order.table.row.ProductName}]]</th>
+        <th>[[#{order.table.row.Amount}]]</th>
+        <th>[[#{order.table.row.ProductPrice}]]</th>
+        <th>[[#{order.table.row.Sum}]]</th>
         <th></th>
     </tr>
     <tr th:each="detail : ${bucketDTO.bucketDetails}">
+        <td th:text="${detail.productId}">productId</td>
         <td>
             <a th:href="@{/products/{id}(id=${detail.productId})}">
                 <img th:src="@{/image/{id}(id=${detail.previewImage.id})}" height="60px"
@@ -42,7 +44,7 @@
 <div th:if="${not #lists.isEmpty(bucketDTO.bucketDetails)}">
     <div>
         <form th:method="POST" th:action="@{/orders}">
-            <input type="submit" value="Create Order">
+            <input type="submit" th:value="#{bucket.button.createOrder}">
         </form>
     </div>
 </div>

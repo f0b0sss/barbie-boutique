@@ -34,9 +34,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Address address;
-
     @Column
     private boolean enabled;
 
