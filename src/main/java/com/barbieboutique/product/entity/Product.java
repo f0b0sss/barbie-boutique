@@ -5,7 +5,7 @@ import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.filter.entity.Attribute;
 import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.language.entity.Language;
-import com.barbieboutique.product.entity.comment.Comment;
+import com.barbieboutique.comment.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,10 +73,9 @@ public class Product {
 
     private boolean available;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "product_comments",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     public Long getId() {

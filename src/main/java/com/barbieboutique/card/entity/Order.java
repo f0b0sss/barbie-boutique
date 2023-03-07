@@ -2,10 +2,7 @@ package com.barbieboutique.card.entity;
 
 import com.barbieboutique.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -43,6 +40,7 @@ public class Order {
     @JoinTable(name = "orders_details",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "detail_id"))
+    @ToString.Exclude
     private List<OrderDetails> details;
 
     @Enumerated(EnumType.STRING)

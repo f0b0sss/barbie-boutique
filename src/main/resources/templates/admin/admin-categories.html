@@ -14,11 +14,10 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 
-<div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
     <a th:href="@{/admin/categories/{id}/new-category(id=0)}">New Category</a>
 </div>
 
-<!--        <img th:src="*{'data:image/jpeg;base64,'+category.image}" height="60px"-->
 <div th:each="category : ${categories}">
     <a th:href="@{/admin/categories/{id}(id=${category.id})}">
         <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"

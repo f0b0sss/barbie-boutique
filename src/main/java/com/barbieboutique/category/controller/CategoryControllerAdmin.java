@@ -28,7 +28,6 @@ public class CategoryControllerAdmin {
     @Transactional
     @GetMapping()
     public String categories(Model model, HttpServletRequest request) {
-//        List<Category> categories = categoryService.getALL();
         Language language = languageService.getByCode("ru");
         List<Category> categories = categoryService.findAllByParentCategoryId(null);
 
@@ -63,7 +62,7 @@ public class CategoryControllerAdmin {
     public String addCategory(@ModelAttribute Category category, MultipartFile file) {
         categoryService.save(category, file);
 
-        return "redirect:/admin/categories";
+        return "redirect:/admin/categories/" + category.getId();
     }
 
     @Transactional
@@ -87,7 +86,6 @@ public class CategoryControllerAdmin {
     @PutMapping("/{id}")
     public String updateCategory(@ModelAttribute Category category, MultipartFile file) {
         if (category.getParentCategory() != null && category.getParentCategory().getId() == null){
-            System.out.println("1");
             category.setParentCategory(null);
         }
 

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
+    <title>[[#{menu.orders}]]</title>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
@@ -31,11 +31,12 @@
             </a>
         </td>
 
-        <td>
+        <td th:if="${order.status.name() == 'NEW'}">
             <form th:method="DELETE" th:action="@{/orders/{id}(id=${order.id})}">
                 <input type="submit" th:value="#{bucket.button.cancel}">
             </form>
         </td>
+
     </tr>
 </table>
 

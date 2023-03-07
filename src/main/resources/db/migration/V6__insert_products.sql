@@ -1,23 +1,15 @@
 INSERT INTO images (id, bytes, content_type, name, original_file_name, size)
-VALUES (8, 85826, 'image/png', 'files', 'gratis-png-logotipo-de-barbie-muneca-mattel-yak.png', 14973),
-       (9, 85827, 'image/png', 'file', 'ie_logo_PNG11.png', 17395),
-       (10, 94022, 'image/jpeg', 'file', 'лого.jpg', 213295),
-       (11, 85826, 'image/png', 'files', 'gratis-png-logotipo-de-barbie-muneca-mattel-yak.png', 14973),
-       (12, 85827, 'image/png', 'file', 'ie_logo_PNG11.png', 17395),
-       (13, 94022, 'image/jpeg', 'file', 'лого.jpg', 213295),
-       (14, 85826, 'image/png', 'files', 'gratis-png-logotipo-de-barbie-muneca-mattel-yak.png', 14973),
-       (15, 85827, 'image/png', 'file', 'ie_logo_PNG11.png', 17395),
-       (16, 94022, 'image/jpeg', 'file', 'лого.jpg', 213295),
-       (17, 94023, 'image/jpeg', 'files', 'зображення_viber_2022-12-13_00-08-59-784.jpg', 96114),
-       (18, 94022, 'image/jpeg', 'file', 'лого.jpg', 213295),
-       (19, 94022, 'image/jpeg', 'file', 'лого.jpg', 213295);
-ALTER SEQUENCE image_seq RESTART WITH 20;
+VALUES (4, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (5, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (6, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (7, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178);
+ALTER SEQUENCE image_seq RESTART WITH 8;
 
 INSERT INTO products (id, available, created_date, discount, price, preview_image_id)
-VALUES (1, TRUE, '2023-01-31 23:13:26.875301', 0, 12.00, 8),
-       (2, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 11),
-       (3, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 14),
-       (4, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 17);
+VALUES (1, TRUE, '2023-01-31 23:13:26.875301', 0, 12.00, 4),
+       (2, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 5),
+       (3, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 6),
+       (4, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 7);
 ALTER SEQUENCE product_seq RESTART WITH 5;
 
 INSERT INTO product_titles_translator (product_id, title, product_titles_key)
@@ -39,21 +31,10 @@ VALUES (1, 'Сідниця1', 1),
 
 
 INSERT INTO product_images (product_id, image_id)
-VALUES (1, 8),
-       (1, 9),
-       (1, 10),
-
-       (2, 11),
-       (2, 12),
-       (2, 13),
-
-       (3, 14),
-       (3, 15),
-       (3, 16),
-
-       (4, 17),
-       (4, 18),
-       (4, 19);
+VALUES (1, 4),
+       (2, 5),
+       (3, 6),
+       (4, 7);
 
 INSERT INTO product_categories (product_id, category_id)
 VALUES (1, 1),

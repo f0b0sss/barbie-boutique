@@ -22,7 +22,7 @@
                         <a th:href="@{/admin/filters}">Filters</a>
                     </td>
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/admin/orders}">New Orders</a>
+                        <a th:href="@{/admin/orders?status=NEW}">Orders</a>
                     </td>
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/users}">Users</a>

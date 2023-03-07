@@ -28,8 +28,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllByStatus(String status) {
-        return orderRepository.findAllByStatus(status);
+    public List<Order> findAllByStatus(OrderStatus status) {
+        List<Order> orders =  orderRepository.findAllByStatus(status);
+
+        return orders;
     }
 
     @Override
@@ -74,6 +76,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getById(Long id) {
         return orderRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public void save(Order order) {
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void updateStatus(OrderStatus status, Long id) {
+        orderRepository.updateStatus(status, id);
     }
 
     @Override

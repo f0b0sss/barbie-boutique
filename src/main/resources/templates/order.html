@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
+    <title>[[#{menu.orders}]]</title>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
@@ -35,8 +35,11 @@
 
     <tr th:each="detail : ${order.details}">
         <td>
-            <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
-                 th:alt="${detail.product.productTitles['__${language.id}__']}">
+            <a th:href="@{/products/{id}(id=${detail.product.id})}">
+                <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
+                     th:alt="${detail.product.productTitles['__${language.id}__']}">
+            </a>
+
         </td>
 
         <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>

@@ -1,6 +1,7 @@
-package com.barbieboutique.product.entity.comment;
+package com.barbieboutique.comment;
 
 
+import com.barbieboutique.product.entity.Product;
 import com.barbieboutique.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,10 +28,12 @@ public class Comment {
     private String text;
 
     @ManyToOne
-    @JoinTable(name = "user_comments",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
 
 

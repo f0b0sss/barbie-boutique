@@ -61,8 +61,10 @@ CREATE TABLE category_titles_translator
 );
 CREATE TABLE comments
 (
-    id   bigint NOT NULL,
-    text varchar(255),
+    id         bigint NOT NULL,
+    text       varchar(255),
+    product_id bigint,
+    user_id    bigint,
     PRIMARY KEY (id)
 );
 CREATE TABLE filter_attributes
@@ -148,11 +150,6 @@ CREATE TABLE product_categories
     product_id  bigint NOT NULL,
     category_id bigint NOT NULL
 );
-CREATE TABLE product_comments
-(
-    product_id bigint NOT NULL,
-    comment_id bigint NOT NULL
-);
 CREATE TABLE product_images
 (
     product_id bigint NOT NULL,
@@ -183,12 +180,6 @@ CREATE TABLE token
     user_id     bigint NOT NULL,
     PRIMARY KEY (id)
 );
-CREATE TABLE user_comments
-(
-    comment_id bigint,
-    user_id    bigint NOT NULL,
-    PRIMARY KEY (user_id)
-);
 CREATE TABLE users
 (
     id        bigint NOT NULL,
@@ -208,8 +199,6 @@ ALTER TABLE IF EXISTS orders_details
     ADD CONSTRAINT UK_6sksyv2vdyrar27lqfv3esnky UNIQUE (detail_id);
 ALTER TABLE IF EXISTS outfit_images
     ADD CONSTRAINT UK_fav00mhnbmkpytcxcmdkyy9eu UNIQUE (image_id);
-ALTER TABLE IF EXISTS product_comments
-    ADD CONSTRAINT UK_7dnyrxxvbpwihesaqbxni8isq UNIQUE (comment_id);
 ALTER TABLE IF EXISTS product_images
     ADD CONSTRAINT UK_faiw41ddc6nywa21m1nodqvy5 UNIQUE (image_id);
 ALTER TABLE IF EXISTS addresses
@@ -232,6 +221,10 @@ ALTER TABLE IF EXISTS category_titles_translator
     ADD CONSTRAINT FKh7tkgjbubijjxv3l7s2yi9533 FOREIGN KEY (category_titles_key) REFERENCES language;
 ALTER TABLE IF EXISTS category_titles_translator
     ADD CONSTRAINT FK40n6id30j5an6b4jj64jxbchd FOREIGN KEY (category_id) REFERENCES categories;
+ALTER TABLE IF EXISTS comments
+    ADD CONSTRAINT FK6uv0qku8gsu6x1r2jkrtqwjtn FOREIGN KEY (product_id) REFERENCES products;
+ALTER TABLE IF EXISTS comments
+    ADD CONSTRAINT FK8omq0tc18jd43bu5tjh6jvraq FOREIGN KEY (user_id) REFERENCES users;
 ALTER TABLE IF EXISTS filter_attributes
     ADD CONSTRAINT FK2qvh6l26leywbumgsifdmdmew FOREIGN KEY (attribute_id) REFERENCES attributes;
 ALTER TABLE IF EXISTS filter_attributes
@@ -264,10 +257,6 @@ ALTER TABLE IF EXISTS product_categories
     ADD CONSTRAINT FKd112rx0alycddsms029iifrih FOREIGN KEY (category_id) REFERENCES categories;
 ALTER TABLE IF EXISTS product_categories
     ADD CONSTRAINT FKlda9rad6s180ha3dl1ncsp8n7 FOREIGN KEY (product_id) REFERENCES products;
-ALTER TABLE IF EXISTS product_comments
-    ADD CONSTRAINT FK8qgeec6agwxy422iqf9dxm0u4 FOREIGN KEY (comment_id) REFERENCES comments;
-ALTER TABLE IF EXISTS product_comments
-    ADD CONSTRAINT FKlvw9kwav1pell1wg6xo0dmme6 FOREIGN KEY (product_id) REFERENCES products;
 -- ALTER TABLE IF EXISTS product_images
 --     ADD CONSTRAINT FK1j9bvqvvdudsd1ydm4fr0y3bk FOREIGN KEY (image_id) REFERENCES images;
 ALTER TABLE IF EXISTS product_images
@@ -280,7 +269,3 @@ ALTER TABLE IF EXISTS products
     ADD CONSTRAINT FKb45ssns0b0258ie8jpiyx532n FOREIGN KEY (preview_image_id) REFERENCES images;
 ALTER TABLE IF EXISTS token
     ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users;
-ALTER TABLE IF EXISTS user_comments
-    ADD CONSTRAINT FKot0wphbhmvik0yib4agch632b FOREIGN KEY (comment_id) REFERENCES users;
-ALTER TABLE IF EXISTS user_comments
-    ADD CONSTRAINT FKe3s47o2hhw8lek5clp4lyxiou FOREIGN KEY (user_id) REFERENCES comments;

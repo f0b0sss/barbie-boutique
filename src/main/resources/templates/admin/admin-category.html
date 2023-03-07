@@ -55,6 +55,8 @@
     <button type="submit">Save</button>
 </form>
 
+<hr>
+
 <div th:each="category : ${subCategories}">
     <a th:href="@{/admin/categories/{id}(id=${category.id})}">
         <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"

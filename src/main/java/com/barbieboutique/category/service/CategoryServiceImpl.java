@@ -9,11 +9,8 @@ import com.barbieboutique.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,21 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
         Image previousImage = new Image();
         Image newImage = new Image();
 
-
-//        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-//        if (filename.contains("..")) {
-//            System.out.println("not valid file");
-//        }
-//
-//
-//        newImage = utils.getImagesFromMultipart(file);
-//        category.setImage(newImage);
-//
-//        categoryRepository.save(category);
-
-
         if (category.getId() == null){
-            System.out.println("i1");
             if (!file.isEmpty()){
                 newImage = utils.getImagesFromMultipart(file);
             }
@@ -71,11 +54,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryRepository.save(category);
-
-        System.out.println(!file.isEmpty());
-        System.out.println(category.getId());
-        System.out.println(previousImage.getId() != null);
-
 
         if (!file.isEmpty() && category.getId() != null && previousImage.getId() != null){
             imageService.deleteById(previousImage.getId());
