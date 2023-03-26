@@ -4,6 +4,7 @@ package com.barbieboutique.product.service;
 import com.barbieboutique.card.entity.Bucket;
 import com.barbieboutique.card.service.BucketService;
 import com.barbieboutique.category.entity.Category;
+import com.barbieboutique.filter.entity.Attribute;
 import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.product.dto.mapper.ProductMapper;
 import com.barbieboutique.product.entity.Product;
@@ -12,10 +13,16 @@ import com.barbieboutique.user.entity.User;
 import com.barbieboutique.user.service.UserService;
 import com.barbieboutique.utils.Utils;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,10 +38,40 @@ public class ProductServiceImpl implements ProductService {
     private final UserService userService;
     private final BucketService bucketService;
 
+    public Page<Product> findAll(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+
+        List<Product> products = productRepository.findAll();
+
+        List<Product> list;
+
+        if (products.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, products.size());
+            list = products.subList(startItem, toIndex);
+        }
+
+        Page<Product> productsPage = new PageImpl<Product>(list, PageRequest.of(currentPage, pageSize), products.size());
+
+        return productsPage;
+    }
 
     @Override
-    public List<Product> getALL() {
+    public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> findAll(Specification<Product> specification) {
+        return productRepository.findAll(specification);
+    }
+
+    @Override
+    public Page<Product> findAll(Specification<Product> specification, Pageable pageable) {
+        return productRepository.findAll(specification, pageable);
     }
 
     @Override
@@ -59,16 +96,7 @@ public class ProductServiceImpl implements ProductService {
         Bucket bucket = user.getBucket();
 
         bucketService.addProducts(bucket, Collections.singletonList(productId));
-
-//        if (bucket == null) {
-//            Bucket newBucket = bucketService.createBucket(user, Collections.singletonList(productId));
-//            user.setBucket(newBucket);
-//            userService.save(user);
-//        } else {
-//            bucketService.addProducts(bucket, Collections.singletonList(productId));
-//        }
     }
-
 
     @Override
     public void save(Product product, MultipartFile[] files) {
@@ -96,6 +124,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public BigDecimal minPrice() {
+        return productRepository.minPrice();
+    }
+
+    @Override
+    public BigDecimal maxPrice() {
+        return productRepository.maxPrice();
+    }
+
+    @Override
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
@@ -119,5 +157,23 @@ public class ProductServiceImpl implements ProductService {
         product.setImages(images);
 
         productRepository.save(product);
+    }
+
+
+//    search API
+
+    @Override
+    public List<Product> findByPriceBetween(BigDecimal min, BigDecimal max) {
+        return productRepository.findByPriceBetween(min, max);
+    }
+
+    @Override
+    public List<Product> findByKeyword(String keyword) {
+        return productRepository.findByKeyword(keyword);
+    }
+
+    @Override
+    public List<Product> findAllByAttributesIn(List<Attribute> attributes) {
+        return productRepository.findAllByAttributesIn(attributes);
     }
 }

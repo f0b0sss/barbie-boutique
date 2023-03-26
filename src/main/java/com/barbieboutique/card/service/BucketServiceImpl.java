@@ -10,7 +10,6 @@ import com.barbieboutique.product.repository.ProductRepository;
 import com.barbieboutique.user.entity.User;
 import com.barbieboutique.user.service.UserService;
 import lombok.AllArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +56,7 @@ public class BucketServiceImpl implements BucketService{
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void addProducts(Bucket bucket, List<Long> productsId) {
         List<Product> products = bucket.getProducts();

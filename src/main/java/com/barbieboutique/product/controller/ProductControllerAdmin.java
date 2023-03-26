@@ -38,7 +38,7 @@ public class ProductControllerAdmin {
     @Transactional
     @GetMapping
     public String products(Model model, HttpServletRequest request) {
-        List<Product> products = productService.getALL();
+        List<Product> products = productService.findAll();
         Language language = languageService.getByCode("ru");
 
         model.addAttribute("products", products);
