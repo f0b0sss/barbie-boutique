@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Outfits</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+    <a th:href="@{/admin/products/new-outfit}">New Outfit</a>
+</div>
+
+
+<div th:each="product : ${products}">
+    <a th:href="@{/admin/products/{id}(id=${product.id})}">
+        <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
+             th:alt="${product.productTitles['__${language.id}__']}">
+        <br>
+        <span th:text="*{product.productTitles['__${language.id}__']}">title</span>
+    </a>
+    <div>
+        <form th:method="DELETE" th:action="@{/admin/products/{id}(id=${product.id})}">
+            <input type="submit" value="Удалить Продукт">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -16,6 +16,9 @@
                         <a th:href="@{/admin/products}">Products</a>
                     </td>
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                        <a th:href="@{/admin/outfits}">Outfits</a>
+                    </td>
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/categories}">Categories</a>
                     </td>
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
