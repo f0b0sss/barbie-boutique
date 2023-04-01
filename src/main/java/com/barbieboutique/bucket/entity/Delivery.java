@@ -1,4 +1,4 @@
-package com.barbieboutique.card.entity;
+package com.barbieboutique.bucket.entity;
 
 import com.barbieboutique.postMethod.entity.PostMethod;
 import lombok.AllArgsConstructor;

@@ -32,9 +32,9 @@
 <br>
 <div>
     <div>[[#{product.price}]]</div>
-    <input type="text" th:field="${product.price}">
+    <div th:text="${product.price}"></div>
 </div>
-<td><a th:href="@{/products/{id}/card(id=${product.id})}">Add to card</a></td>
+<td><a th:href="@{/products/{id}/card(id=${product.id})}">[[#{product.button.addToCard}]]</a></td>
 
 <hr>
 <div>
@@ -65,9 +65,17 @@
 
 </div>
 
-<!--<form>-->
-<!--    <form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" th:method="PUT">-->
-<!--</form>-->
+<hr>
+<div th:each="outfit : ${outfits}">
+    <a th:href="@{/outfits/{id}(id=${outfit.id})}">
+        <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="60px"
+             th:alt="${outfit.outfitTitles['__${language.id}__']}">
+        <br>
+        <span th:text="*{outfit.outfitTitles['__${language.id}__']}">title</span>
+        <b><span th:text="*{outfit.price}">price</span></b>
+    </a>
+</div>
+
 
 
 </body>

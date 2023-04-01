@@ -5,9 +5,10 @@ import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.category.service.CategoryService;
 import com.barbieboutique.filter.entity.Filter;
 import com.barbieboutique.filter.service.FilterService;
-import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.language.entity.Language;
+import com.barbieboutique.product.entity.Outfit;
 import com.barbieboutique.product.entity.Product;
+import com.barbieboutique.product.service.OutfitService;
 import com.barbieboutique.product.service.ProductService;
 import com.barbieboutique.searchFilterAPI.PriceRange;
 import com.barbieboutique.searchFilterAPI.SearchEntityDTO;
@@ -37,6 +38,8 @@ public class ProductController {
     private FilterService filterService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private OutfitService outfitService;
     @Autowired
     private Utils utils;
 
@@ -68,7 +71,6 @@ public class ProductController {
         List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
         Page<Product> productPage = productService.findAll(PageRequest.of(currentPage - 1, pageSize));
-
 
         BigDecimal minPrice = productService.minPrice();
         BigDecimal maxPrice = productService.maxPrice();
@@ -103,26 +105,19 @@ public class ProductController {
                 searchEntityDTO.getPriceRange().getMin(),
                 searchEntityDTO.getPriceRange().getMax());
 
-        System.out.println("size - " + products.size());
-
         if (searchEntityDTO.getTitle() != null) {
-            System.out.println("1");
             List<Product> temp = productService.findByKeyword(searchEntityDTO.getTitle().toLowerCase());
             products = products.stream()
                     .filter(temp::contains)
                     .collect(Collectors.toList());
         }
-        System.out.println("size - " + products.size());
         if (searchEntityDTO.getCategories().size() != 0) {
-            System.out.println("2");
             List<Product> temp = productService.findAllByCategoriesIn(searchEntityDTO.getCategories());
             products = products.stream()
                     .filter(temp::contains)
                     .collect(Collectors.toList());
         }
-        System.out.println("size - " + products.size());
         if (searchEntityDTO.getAttributes().size() != 0) {
-            System.out.println("3");
             List<Product> temp = productService.findAllByAttributesIn(searchEntityDTO.getAttributes());
             products = products.stream()
                     .filter(temp::contains)
@@ -260,13 +255,15 @@ public class ProductController {
 
         List<Category> categories = product.getCategories().stream().toList();
         List<Filter> filters = filterService.getALL();
+        List<Outfit> outfits = outfitService.findAllByProductsContaining(product);
 
-        List<Image> images = product.getImages().stream().toList();
+//        List<Image> images = product.getImages().stream().toList();
 
         model.addAttribute("product", product);
+        model.addAttribute("outfits", outfits);
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
-        model.addAttribute("images", images);
+        model.addAttribute("images",  product.getImages());
         model.addAttribute("language", language);
 
         return "product";

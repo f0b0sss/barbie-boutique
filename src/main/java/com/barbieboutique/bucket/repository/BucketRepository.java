@@ -1,6 +1,6 @@
-package com.barbieboutique.card.repository;
+package com.barbieboutique.bucket.repository;
 
-import com.barbieboutique.card.entity.Bucket;
+import com.barbieboutique.bucket.entity.Bucket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BucketRepository extends JpaRepository<Bucket, Long> {

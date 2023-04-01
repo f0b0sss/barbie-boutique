@@ -17,14 +17,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     List<Product> findAllByCategories(Category category);
 
+
+    //for searching API
     @Query(value = "SELECT min(price) FROM Product")
     BigDecimal minPrice();
 
     @Query(value = "SELECT max(price) FROM Product")
     BigDecimal maxPrice();
-
-
-    //for searching API
     List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
 
     @Query("from Product p join p.productTitles t where lower(VALUE(t)) like %?1%")

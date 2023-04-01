@@ -1,8 +1,8 @@
 package com.barbieboutique.product.service;
 
 
-import com.barbieboutique.card.entity.Bucket;
-import com.barbieboutique.card.service.BucketService;
+import com.barbieboutique.bucket.entity.Bucket;
+import com.barbieboutique.bucket.service.BucketService;
 import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.filter.entity.Attribute;
 import com.barbieboutique.image.entity.Image;

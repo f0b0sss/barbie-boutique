@@ -1,9 +1,9 @@
-package com.barbieboutique.card.service;
+package com.barbieboutique.bucket.service;
 
 
-import com.barbieboutique.card.entity.*;
-import com.barbieboutique.card.repository.BucketRepository;
-import com.barbieboutique.card.repository.OrderRepository;
+import com.barbieboutique.bucket.entity.*;
+import com.barbieboutique.bucket.repository.BucketRepository;
+import com.barbieboutique.bucket.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

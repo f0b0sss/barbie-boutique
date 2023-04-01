@@ -59,15 +59,14 @@
 
     <hr>
 
-    <div>Status</div>
+    <span th:if="${order.status.name() != 'NEW'}">
+    <div>Change Status</div>
     <div th:each="status : ${orderStatuses}">
-        <span th:if="${order.status.name() != 'NEW'}">
-            <input type="radio" th:field="${order.status}" name="status" th:value="${status}">
-            <span th:text="${status}">title</span>
-        </span>
+        <input type="radio" th:field="${order.status}" name="status" th:value="${status}">
+        <span th:text="${status}">title</span>
     </div>
-
     <input type="submit" th:value="Обновить">
+    </span>
 </form>
 
 

@@ -1,10 +1,10 @@
-package com.barbieboutique.card.controller;
+package com.barbieboutique.bucket.controller;
 
-import com.barbieboutique.card.entity.Bucket;
-import com.barbieboutique.card.entity.Delivery;
-import com.barbieboutique.card.entity.Order;
-import com.barbieboutique.card.entity.OrderStatus;
-import com.barbieboutique.card.service.OrderService;
+import com.barbieboutique.bucket.entity.Bucket;
+import com.barbieboutique.bucket.entity.Delivery;
+import com.barbieboutique.bucket.entity.Order;
+import com.barbieboutique.bucket.entity.OrderStatus;
+import com.barbieboutique.bucket.service.OrderService;
 import com.barbieboutique.language.entity.Language;
 import com.barbieboutique.site.entity.Notification;
 import com.barbieboutique.user.entity.User;

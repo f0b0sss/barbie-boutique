@@ -31,16 +31,15 @@ public interface ProductService {
 
     Product getById(Long id);
 
-    BigDecimal minPrice();
-
-    BigDecimal maxPrice();
-
     void deleteById(Long id);
 
     void deleteProductImage(Product product, Long image_id);
 
 
     //    search API
+    BigDecimal minPrice();
+
+    BigDecimal maxPrice();
     List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
     List<Product> findByKeyword(String keyword);
 

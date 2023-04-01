@@ -1,4 +1,4 @@
-package com.barbieboutique.card.entity;
+package com.barbieboutique.bucket.entity;
 
 import com.barbieboutique.user.entity.User;
 import jakarta.persistence.*;

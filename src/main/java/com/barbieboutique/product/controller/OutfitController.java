@@ -1,50 +1,44 @@
 package com.barbieboutique.product.controller;
 
 
+import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.category.service.CategoryService;
+import com.barbieboutique.filter.entity.Filter;
 import com.barbieboutique.filter.service.FilterService;
 import com.barbieboutique.image.entity.Image;
-import com.barbieboutique.image.service.ImageService;
 import com.barbieboutique.language.entity.Language;
 import com.barbieboutique.product.entity.Outfit;
-import com.barbieboutique.product.entity.Product;
 import com.barbieboutique.product.service.OutfitService;
-import com.barbieboutique.product.service.ProductService;
 import com.barbieboutique.searchFilterAPI.PriceRange;
 import com.barbieboutique.searchFilterAPI.SearchEntityDTO;
 import com.barbieboutique.utils.Utils;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 @Controller
-@RequestMapping("/admin/outfits")
-public class OutfitControllerAdmin {
+@RequestMapping("/outfits")
+public class OutfitController {
     @Autowired
     private OutfitService outfitService;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private Utils utils;
     @Autowired
     private FilterService filterService;
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private ImageService imageService;
-
+    private Utils utils;
 
     @GetMapping
     public String outfits(Model model,
@@ -75,77 +69,79 @@ public class OutfitControllerAdmin {
         model.addAttribute("language", language);
         model.addAttribute("searchEntityDTO", searchEntityDTO);
 
-        return "admin-outfits";
+        return "outfits";
     }
 
-    @GetMapping("/new-outfit")
-    public String newOutfit(Model model) {
-        Outfit outfit = new Outfit();
-        outfit.setOutfitTitles(utils.translatorTemplate());
 
-        List<Product> products = productService.findAll();
+
+    @GetMapping("/search")
+    public String search(@ModelAttribute SearchEntityDTO searchEntityDTO, Model model,
+                         @RequestParam("page") Optional<Integer> page,
+                         @RequestParam("size") Optional<Integer> size) {
+        List<Outfit> outfits = outfitService.findByPriceBetween(
+                searchEntityDTO.getPriceRange().getMin(),
+                searchEntityDTO.getPriceRange().getMax());
+
+        if (searchEntityDTO.getTitle() != null) {
+            List<Outfit> temp = outfitService.findByKeyword(searchEntityDTO.getTitle().toLowerCase());
+            outfits = outfits.stream()
+                    .filter(temp::contains)
+                    .collect(Collectors.toList());
+        }
+
         Language language = utils.getCurrentLanguage();
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
 
-        model.addAttribute("outfit", outfit);
-        model.addAttribute("products", products);
+        List<Category> categories = categoryService.getALL();
+        List<Filter> filters = filterService.getALL();
+        Page<Outfit> outfitPage = new PageImpl<>(outfits, PageRequest.of(currentPage - 1, pageSize), outfits.size());
+
+
+        int totalPages = outfitPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("outfitPage", outfitPage);
         model.addAttribute("language", language);
+        model.addAttribute("categories", categories);
+        model.addAttribute("filters", filters);
+        model.addAttribute("searchEntityDTO", searchEntityDTO);
 
-        return "new-outfit";
-    }
-
-    @PostMapping
-    public String addOutfit(@ModelAttribute Outfit outfit, MultipartFile[] files) {
-        outfitService.save(outfit, files);
-
-        return "redirect:/admin/outfits";
+        return "outfits";
     }
 
     @Transactional
     @GetMapping("/{id}")
-    public String editOutfit(@PathVariable Long id, Model model) {
+    public String outfit(@PathVariable Long id, Model model) {
         Outfit outfit = outfitService.getById(id);
-        List<Image> images = outfit.getImages().stream().toList();
         Language language = utils.getCurrentLanguage();
 
+        List<Filter> filters = filterService.getALL();
+
+        List<Image> images = outfit.getImages().stream().toList();
+
         model.addAttribute("outfit", outfit);
+        model.addAttribute("filters", filters);
         model.addAttribute("images", images);
         model.addAttribute("language", language);
 
-        return "admin-outfit";
+        return "outfit";
     }
 
-    @Transactional
-    @PutMapping("/{id}")
-    public String updateOutfit(@PathVariable Long id,
-                                @ModelAttribute Outfit outfit,
-                                MultipartFile[] files) {
-        Outfit temp = outfitService.getById(id);
+    @GetMapping("{id}/card")
+    public String addToCard(@PathVariable Long id, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
 
-        outfit.setImages(temp.getImages());
-        outfit.setProducts(temp.getProducts());
+        outfitService.addToUserCard(id, principal.getName());
 
-        outfitService.save(outfit, files);
-
-        return "redirect:/admin/outfits/" + id;
+        return "redirect:/outfits/" + id;
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteOutfit(@PathVariable Long id) {
-        outfitService.deleteById(id);
-
-        return "redirect:/admin/outfits";
-    }
-
-    @Transactional
-    @GetMapping("/{outfit_id}/images/{image_id}")
-    public String deleteOutfitImage(@PathVariable Long outfit_id,
-                                     @PathVariable Long image_id) {
-        Outfit outfit = outfitService.getById(outfit_id);
-
-        outfitService.deleteOutfitImage(outfit, image_id);
-
-        imageService.deleteById(image_id);
-
-        return "redirect:/admin/outfits/" + outfit_id;
-    }
 }

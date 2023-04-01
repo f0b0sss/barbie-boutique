@@ -1,4 +1,4 @@
-package com.barbieboutique.card.dto;
+package com.barbieboutique.bucket.dto;
 
 import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.language.entity.Language;

@@ -1,8 +1,8 @@
-package com.barbieboutique.card.service;
+package com.barbieboutique.bucket.service;
 
 
-import com.barbieboutique.card.dto.BucketDTO;
-import com.barbieboutique.card.entity.Bucket;
+import com.barbieboutique.bucket.dto.BucketDTO;
+import com.barbieboutique.bucket.entity.Bucket;
 import com.barbieboutique.user.entity.User;
 
 import java.util.List;

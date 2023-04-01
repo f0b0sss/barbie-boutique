@@ -1,4 +1,4 @@
-package com.barbieboutique.card.dto;
+package com.barbieboutique.bucket.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -11,7 +11,6 @@ CREATE SEQUENCE outfit_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE product_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 50;
 CREATE SEQUENCE user_seq START WITH 1 INCREMENT BY 1;
-
 CREATE TABLE attribute_titles_translator
 (
     attribute_id         bigint NOT NULL,
@@ -123,11 +122,18 @@ CREATE TABLE outfit_products
     product_id bigint NOT NULL,
     outfit_id  bigint NOT NULL
 );
+CREATE TABLE outfit_titles_translator
+(
+    outfit_id         bigint NOT NULL,
+    title             varchar(255),
+    outfit_titles_key bigint NOT NULL,
+    PRIMARY KEY (outfit_id, outfit_titles_key)
+);
 CREATE TABLE outfits
 (
     id               bigint NOT NULL,
-    preview_image_id bigint,
     price            numeric(38, 2),
+    preview_image_id bigint,
     PRIMARY KEY (id)
 );
 CREATE TABLE product_attributes
@@ -237,6 +243,12 @@ ALTER TABLE IF EXISTS outfit_products
     ADD CONSTRAINT FKonqy6qxqsg6tkbdut3dso5cn4 FOREIGN KEY (outfit_id) REFERENCES products;
 ALTER TABLE IF EXISTS outfit_products
     ADD CONSTRAINT FK1pdr772dj4cgh6sy2cjd576mq FOREIGN KEY (product_id) REFERENCES outfits;
+ALTER TABLE IF EXISTS outfit_titles_translator
+    ADD CONSTRAINT FKth2qieb8y9ondmn4fpqa3dwe9 FOREIGN KEY (outfit_titles_key) REFERENCES language;
+ALTER TABLE IF EXISTS outfit_titles_translator
+    ADD CONSTRAINT FKlb407komaw7ite4u8xq354n2v FOREIGN KEY (outfit_id) REFERENCES outfits;
+ALTER TABLE IF EXISTS outfits
+    ADD CONSTRAINT FKxeowmxtubul7n7qu6m1wpxg6 FOREIGN KEY (preview_image_id) REFERENCES images;
 ALTER TABLE IF EXISTS product_attributes
     ADD CONSTRAINT FK6ksuorb5567jpa08ihcumumy1 FOREIGN KEY (attribute_id) REFERENCES attributes;
 ALTER TABLE IF EXISTS product_attributes
@@ -256,4 +268,4 @@ ALTER TABLE IF EXISTS product_titles_translator
 ALTER TABLE IF EXISTS products
     ADD CONSTRAINT FKb45ssns0b0258ie8jpiyx532n FOREIGN KEY (preview_image_id) REFERENCES images;
 ALTER TABLE IF EXISTS token
-    ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users;
+    ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users

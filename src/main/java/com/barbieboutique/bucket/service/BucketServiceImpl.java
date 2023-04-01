@@ -1,10 +1,10 @@
-package com.barbieboutique.card.service;
+package com.barbieboutique.bucket.service;
 
 
-import com.barbieboutique.card.dto.BucketDTO;
-import com.barbieboutique.card.dto.BucketDetailDTO;
-import com.barbieboutique.card.entity.Bucket;
-import com.barbieboutique.card.repository.BucketRepository;
+import com.barbieboutique.bucket.dto.BucketDTO;
+import com.barbieboutique.bucket.dto.BucketDetailDTO;
+import com.barbieboutique.bucket.entity.Bucket;
+import com.barbieboutique.bucket.repository.BucketRepository;
 import com.barbieboutique.product.entity.Product;
 import com.barbieboutique.product.repository.ProductRepository;
 import com.barbieboutique.user.entity.User;
@@ -50,12 +50,6 @@ public class BucketServiceImpl implements BucketService{
         return bucketRepository.save(bucket);
     }
 
-    private List<Product> getCollectRefProductsById(List<Long> productsId) {
-        return productsId.stream()
-                .map(productRepository::getReferenceById)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     @Override
     public void addProducts(Bucket bucket, List<Long> productsId) {
@@ -67,6 +61,12 @@ public class BucketServiceImpl implements BucketService{
         bucket.setProducts(newProductsList);
 
         bucketRepository.save(bucket);
+    }
+
+    private List<Product> getCollectRefProductsById(List<Long> productsId) {
+        return productsId.stream()
+                .map(productRepository::getReferenceById)
+                .collect(Collectors.toList());
     }
 
     @Override

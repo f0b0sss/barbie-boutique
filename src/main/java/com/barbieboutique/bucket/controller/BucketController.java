@@ -1,8 +1,8 @@
-package com.barbieboutique.card.controller;
+package com.barbieboutique.bucket.controller;
 
 
-import com.barbieboutique.card.dto.BucketDTO;
-import com.barbieboutique.card.service.BucketService;
+import com.barbieboutique.bucket.dto.BucketDTO;
+import com.barbieboutique.bucket.service.BucketService;
 import com.barbieboutique.language.entity.Language;
 import com.barbieboutique.user.entity.User;
 import com.barbieboutique.user.service.UserService;

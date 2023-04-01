@@ -1,10 +1,10 @@
-package com.barbieboutique.card.service;
+package com.barbieboutique.bucket.service;
 
 
-import com.barbieboutique.card.entity.Bucket;
-import com.barbieboutique.card.entity.Delivery;
-import com.barbieboutique.card.entity.Order;
-import com.barbieboutique.card.entity.OrderStatus;
+import com.barbieboutique.bucket.entity.Bucket;
+import com.barbieboutique.bucket.entity.Delivery;
+import com.barbieboutique.bucket.entity.Order;
+import com.barbieboutique.bucket.entity.OrderStatus;
 
 import java.util.List;
 

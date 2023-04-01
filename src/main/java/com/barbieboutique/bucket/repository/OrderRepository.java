@@ -1,7 +1,7 @@
-package com.barbieboutique.card.repository;
+package com.barbieboutique.bucket.repository;
 
-import com.barbieboutique.card.entity.Order;
-import com.barbieboutique.card.entity.OrderStatus;
+import com.barbieboutique.bucket.entity.Order;
+import com.barbieboutique.bucket.entity.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

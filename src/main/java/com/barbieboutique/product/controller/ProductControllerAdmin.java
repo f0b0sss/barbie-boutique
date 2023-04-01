@@ -5,7 +5,6 @@ import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.category.service.CategoryService;
 import com.barbieboutique.filter.entity.Filter;
 import com.barbieboutique.filter.service.FilterService;
-import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.image.service.ImageService;
 import com.barbieboutique.language.entity.Language;
 import com.barbieboutique.language.service.LanguageService;
@@ -80,11 +79,9 @@ public class ProductControllerAdmin {
         List<Filter> filters = filterService.getALL();
         List<Category> allCategories = categoryService.getALL();
 
-        List<Image> images = product.getImages().stream().toList();
-
         model.addAttribute("product", product);
         model.addAttribute("allCategories", allCategories);
-        model.addAttribute("images", images);
+        model.addAttribute("images", product.getImages());
         model.addAttribute("filters", filters);
         model.addAttribute("language", language);
 
