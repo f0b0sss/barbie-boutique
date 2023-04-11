@@ -8,6 +8,7 @@ CREATE SEQUENCE language_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE order_details_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE orders_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE outfit_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE post_method_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE product_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 50;
 CREATE SEQUENCE user_seq START WITH 1 INCREMENT BY 1;
@@ -249,6 +250,10 @@ ALTER TABLE IF EXISTS outfit_titles_translator
     ADD CONSTRAINT FKlb407komaw7ite4u8xq354n2v FOREIGN KEY (outfit_id) REFERENCES outfits;
 ALTER TABLE IF EXISTS outfits
     ADD CONSTRAINT FKxeowmxtubul7n7qu6m1wpxg6 FOREIGN KEY (preview_image_id) REFERENCES images;
+ALTER TABLE IF EXISTS post_method_titles_translator
+    ADD CONSTRAINT FKkfoxm3ljrh2afgxotbrk5x1mv FOREIGN KEY (post_method_titles_key) REFERENCES language;
+ALTER TABLE IF EXISTS post_method_titles_translator
+    ADD CONSTRAINT FKej18lwvji1dn706d9mughbjom FOREIGN KEY (post_method_id) REFERENCES post_methods;
 ALTER TABLE IF EXISTS product_attributes
     ADD CONSTRAINT FK6ksuorb5567jpa08ihcumumy1 FOREIGN KEY (attribute_id) REFERENCES attributes;
 ALTER TABLE IF EXISTS product_attributes
@@ -268,4 +273,4 @@ ALTER TABLE IF EXISTS product_titles_translator
 ALTER TABLE IF EXISTS products
     ADD CONSTRAINT FKb45ssns0b0258ie8jpiyx532n FOREIGN KEY (preview_image_id) REFERENCES images;
 ALTER TABLE IF EXISTS token
-    ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users
+    ADD CONSTRAINT FKj8rfw4x0wjjyibfqq566j4qng FOREIGN KEY (user_id) REFERENCES users;

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
@@ -84,13 +85,16 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/checkout")
-    public String orderCheckout(@PathVariable Long id, Model model) {
+    public String orderCheckout(Principal principal, @PathVariable Long id, Model model) throws IOException {
         Language language = utils.getCurrentLanguage();
         Order order = orderService.getById(id);
 
+        Delivery delivery = new Delivery();
+        delivery.setOrder(order);
+
         model.addAttribute("language", language);
         model.addAttribute("order", order);
-        model.addAttribute("delivery", new Delivery());
+        model.addAttribute("delivery", delivery);
 
         return "checkout";
     }
@@ -108,16 +112,23 @@ public class OrderController {
 
         User user = delivery.getOrder().getUser();
 
-        String deliveryMessage = buildDeliveryInfo(delivery, locale);
+        String deliveryMessageClient = buildDeliveryInfoClient(delivery, locale);
+        String deliveryMessageAdmin = buildDeliveryInfoAdmin(delivery);
+
+        System.out.println(delivery.getPostDetails().getPostIndex());
+        System.out.println(delivery.getPostDetails().getCity());
 
         orderService.updateStatus(OrderStatus.CREATED, delivery.getOrder().getId());
+        mailSender.send(constructOrderEmail(subject, deliveryMessageClient, user));
 
-        mailSender.send(constructResetTokenEmail(subject, deliveryMessage, user));
+        User admin = new User();
+        admin.setEmail("lizamatveykina@gmail.com");
+        mailSender.send(constructOrderEmail(subject, deliveryMessageAdmin, admin));
 
         return "redirect:/orders";
     }
 
-    private String buildDeliveryInfo(Delivery delivery, Locale locale) {
+    private String buildDeliveryInfoClient(Delivery delivery, Locale locale) {
         Long orderN = delivery.getOrder().getId();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -133,8 +144,30 @@ public class OrderController {
                 "sum: " + sum + "\n";
     }
 
-    private SimpleMailMessage constructResetTokenEmail(String subject, String deliveryMessage, User user) {
+    private String buildDeliveryInfoAdmin(Delivery delivery) {
+        Long orderN = delivery.getOrder().getId();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String created = delivery.getOrder().getCreated().format(formatter);
+
+        BigDecimal sum = delivery.getOrder().getSum();
+
+        return "New Order" + "\n\n" +
+                "orderN: " + orderN + "\n" +
+                "created : " + created + "\n" +
+                "email : " + delivery.getOrder().getUser().getEmail() + "\n" +
+                "firstname : " + delivery.getOrder().getUser().getFirstname() + "\n" +
+                "lastname : " + delivery.getOrder().getUser().getLastname() + "\n" +
+                "phone : " + delivery.getOrder().getUser().getPhone() + "\n" +
+                "post method : " + delivery.getPostDetails().getPostMethod() + "\n" +
+                "city : " + delivery.getPostDetails().getCity() + "\n" +
+                "post index : " + delivery.getPostDetails().getPostIndex() + "\n" +
+                "address : " + delivery.getPostDetails().getAddress() + "\n" +
+                "created : " + created + "\n" +
+                "sum: " + sum + "\n";
+    }
+
+    private SimpleMailMessage constructOrderEmail(String subject, String deliveryMessage, User user) {
         return constructEmail(subject, " \r\n" + deliveryMessage, user);
     }
 

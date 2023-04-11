@@ -51,8 +51,13 @@
                          th:alt="${detail.product.productTitles['__${language.id}__']}">
                 </a>
             </td>
-
-            <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
+            <td>
+                <a th:href="@{/products/{id}(id=${detail.product.id})}">
+                    <div th:text="${detail.product.productTitles['__${language.id}__']}">
+                        productTitles
+                    </div>
+                </a>
+            </td>
             <td th:text="${detail.product.price}">price</td>
         </tr>
     </table>
