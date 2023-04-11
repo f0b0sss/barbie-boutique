@@ -12,11 +12,6 @@
         <td align="center">
             <table>
                 <tr>
-                    <!--                    <td><a th:href="@{?lang=uk}">ua</a></td>-->
-                    <!--                    <td><a th:href="@{?lang=ru}">ru</a></td>-->
-                    <!--                    <td><a th:href="@{?lang=en}">en</a></td>-->
-
-
                     <td>
                         <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
                            th:href="${urlBuilder.replaceQueryParam('lang', 'uk').toUriString()}">ua
@@ -35,6 +30,7 @@
                     <td><a th:href="@{/}">[[#{menu.home}]]</a></td>
                     <td><a th:href="@{/categories}">[[#{menu.categories}]]</a></td>
                     <td><a th:href="@{/products}">[[#{menu.products}]]</a></td>
+                    <td><a th:href="@{/outfits}">[[#{menu.outfits}]]</a></td>
 
 
                     <td sec:authorize="isAuthenticated()">
@@ -42,7 +38,6 @@
                     </td>
                     <td sec:authorize="isAuthenticated()">
                         <a th:href="@{/orders}">[[#{menu.orders}]]</a>
-
                     </td>
 
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">

@@ -1,4 +1,3 @@
-
 input[type=file]:before {
     content: "Выбрать файл";
     margin: 0 5px;

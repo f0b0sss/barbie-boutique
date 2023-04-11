@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация про продукт</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<form th:action="@{/admin/outfits/{id}(id=${outfit.id})}" th:object="${outfit}" th:method="PUT"
+      enctype="multipart/form-data">
+    <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="60px"
+         th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
+
+    <div th:each="entry : ${outfit.outfitTitles.entrySet()}">
+        <div>
+            <label th:for="*{outfitTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+            <input type="text" th:field="*{outfitTitles['__${entry.key.id}__']}"/>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div>[[#{product.price}]]</div>
+        <b><span th:text="${outfit.price}">price</span></b>
+
+    </div>
+
+    <br>
+    <div>
+        <div th:each="image, stat : ${images}">
+            <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
+                 th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
+            <input type="radio" th:field="${outfit.previewImage}" name="previewImage" th:value="${image.id}">
+            <a th:href="@{/admin/outfits/{outfit_id}/images/{image_id}(outfit_id=${outfit.id}, image_id=${image.id})}">Удалить
+                image</a>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div>Add Images</div>
+        <input type="file" name="files" multiple="multiple">
+    </div>
+
+    <button type="submit">Update</button>
+</form>
+
+<hr>
+<div th:each="product : ${outfit.products}">
+    <a th:href="@{/admin/products/{id}(id=${product.id})}">
+        <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
+             th:alt="${product.productTitles['__${language.id}__']}">
+        <br>
+        <span th:text="${product.productTitles['__${language.id}__']}">title</span>
+        <b><span th:text="${product.price}">price</span></b>
+    </a>
+</div>
+
+
+
+
+
+</body>
+</html>

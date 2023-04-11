@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация про продукт</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+
+
+<div>
+    <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="60px"
+         th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
+    <span th:text="*{outfit.outfitTitles['__${language.id}__']}">title</span>
+    <br>
+    <div>
+        <div>Цена</div>
+        <b><span th:text="${outfit.price}">price</span></b>
+    </div>
+    <td><a th:href="@{/outfits/{id}/card(id=${outfit.id})}">[[#{product.button.addToCard}]]</a></td>
+
+    <br>
+    <div>
+        <div th:each="image, stat : ${images}">
+            <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
+                 th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+<div th:each="product : ${outfit.products}">
+    <a th:href="@{/products/{id}(id=${product.id})}">
+        <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
+             th:alt="${product.productTitles['__${language.id}__']}">
+        <br>
+        <span th:text="${product.productTitles['__${language.id}__']}">title</span>
+    </a>
+</div>
+
+
+
+
+
+</body>
+</html>

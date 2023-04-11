@@ -8,10 +8,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     void deleteById(Long id);
 
-//    @Query(nativeQuery = true, value = "SET nu")
-//    void setParentCategoryNull(Long id);
-
-//    @Query(nativeQuery = true, value = "SET nu")
     List<Category> findAllByParentCategoryId(Long id);
 
 }

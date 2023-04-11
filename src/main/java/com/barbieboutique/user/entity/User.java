@@ -1,6 +1,6 @@
 package com.barbieboutique.user.entity;
 
-import com.barbieboutique.card.entity.Bucket;
+import com.barbieboutique.bucket.entity.Bucket;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

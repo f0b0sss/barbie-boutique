@@ -64,6 +64,14 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
+            <!--    search/filer     -->
+<!--        <dependency>-->
+<!--            <groupId>net.kaczmarzyk</groupId>-->
+<!--            <artifactId>specification-arg-resolver</artifactId>-->
+<!--            <version>3.0.1</version>-->
+<!--        </dependency>-->
+
+
 
         <!--      Mail    -->
         <dependency>
@@ -111,6 +119,8 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.3.Final</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

@@ -2,6 +2,7 @@ package com.barbieboutique.product.entity;
 
 
 import com.barbieboutique.image.entity.Image;
+import com.barbieboutique.language.entity.Language;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +27,16 @@ public class Outfit {
     @SequenceGenerator(name = SEQ_NAME, sequenceName = SEQ_NAME, allocationSize = 1)
     private Long id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ElementCollection
+    @CollectionTable(name = "outfit_titles_translator",
+            joinColumns = {@JoinColumn(
+                    name = "outfit_id",
+                    referencedColumnName = "id")})
+    @MapKeyColumn(name = "code")
+    @Column(name = "title")
+    private Map<Language, String> outfitTitles;
+
+    @ManyToMany
     @JoinTable(name = "outfit_products",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "outfit_id"))
@@ -39,5 +50,6 @@ public class Outfit {
             inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
 
-    private Long previewImageId;
+    @OneToOne
+    private Image previewImage;
 }
