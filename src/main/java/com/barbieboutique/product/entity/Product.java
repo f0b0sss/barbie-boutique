@@ -68,7 +68,7 @@ public class Product {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Image previewImage;
 
     private boolean available;

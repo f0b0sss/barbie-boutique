@@ -2,7 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>[[#{order.checkout}]]</title>
+    <style>
+        body {
+            font-family: arial;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        p {
+            font-weight: bold;
+        }
+    </style>
+
 
 </head>
 <body>
@@ -52,23 +68,166 @@
 <div>
     <form th:method="POST" th:action="@{/orders/{id}/checkout(id=${order.id})}" th:object="${delivery}">
 
-<!--        <fieldset>-->
-<!--            <legend>[[#{checkout.delivery.method}]]</legend>-->
-<!--            <div>-->
-<!--                <input type="radio" th:field="*{delivery.postMethod}" id="postMethod" name="novaPoshta"-->
-<!--                       th:value="" checked>-->
-<!--                <span th:text="#{checkout.delivery.method.novaPoshta}">title</span>-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <input type="radio" th:field="*{delivery.postMethod}" id="postMethod" name="ukrPoshta"-->
-<!--                       th:value="" checked>-->
-<!--                <span th:text="#{checkout.delivery.method.ukrPoshta}">title</span>-->
-<!--            </div>-->
-<!--        </fieldset>-->
+        <fieldset>
+            <legend>[[#{checkout.contactInfo}]]</legend>
+            <br>
+            <label for="firstname">[[#{registration.firstname}]]: </label>
+            <input type="text" required th:field="${delivery.order.user.firstname}" id="firstname"/>
+            <br>
+            <label for="lastname">[[#{registration.lastname}]]: </label>
+            <input type="text" required th:field="${delivery.order.user.lastname}" id="lastname"/>
+            <br>
+            <label for="email">[[#{registration.email}]]: </label>
+            <input type="text" required th:field="${delivery.order.user.email}" id="email"/>
+            <br>
+            <label for="phone">[[#{registration.phone}]]: </label>
+            <input type="text" required th:field="${delivery.order.user.phone}" id="phone"/>
+        </fieldset>
 
-        <input type="submit" th:value="#{order.checkout}">
+
+        <div>[[#{checkout.delivery.method}]]</div>
+        <div>
+            <input type="radio" th:field="${delivery.postDetails.postMethod}" id="novaPoshta" name="postMethod"
+                   th:value="#{checkout.delivery.method.novaPoshta}" onclick="show1();">
+            <span th:text="#{checkout.delivery.method.novaPoshta}">title</span>
+        </div>
+        <div>
+            <input type="radio" th:field="${delivery.postDetails.postMethod}" id="ukrPoshta" name="postMethod"
+                   th:value="#{checkout.delivery.method.urkPoshta}" onclick="show2();">
+            <span th:text="#{checkout.delivery.method.urkPoshta}">title</span>
+        </div>
+        <div id="div1" class="hide">
+            <hr>
+            <p>[[#{checkout.delivery.method.novaPoshta}]]</p>
+
+            <label for="city-options">[[#{text.novaposhta.enter.cityName}]]:</label>
+            <input type="text" id="city-options" placeholder="Назва населеного пункту">
+            <br>
+            <label for="post-options">[[#{text.novaposhta.enter.Warehouses}]]:</label>
+            <select class="one" id="post-options"></select>
+
+            <!--                <select id="select_oblast">-->
+            <!--                    <option value="">choose your location</option>-->
+            <!--                    <span th:each="address : ${area.data}">-->
+            <!--                    <option th:text="${address.Description}" th:value="${address.Description}">location</option>-->
+            <!--                    </span>-->
+            <!--                </select>-->
+
+            <!--                <select id="select_city">-->
+            <!--                    <option value="">choose your city</option>-->
+            <!--                    <span th:each="city : ${settlement.data}">-->
+            <!--                    <option th:text="${city.Description}" th:value="${city.Description}">city</option>-->
+            <!--                    </span>-->
+            <!--                </select>-->
+        </div>
+
+        <div id="div2" class="hide">
+            <hr>
+            <p>[[#{checkout.delivery.method.urkPoshta}]]</p>
+            <br>
+            <label for="city">[[#{checkout.delivery.city}]]: </label>
+            <input type="text" required th:field="${delivery.postDetails.city}" id="city" class="city"/>
+            <br>
+            <label for="index">[[#{checkout.delivery.index}]]: </label>
+            <input type="text" required th:field="${delivery.postDetails.postIndex}" id="index" class="index"/>
+            <br>
+            <label for="address">[[#{checkout.delivery.address}]]: </label>
+            <input type="text" required th:field="${delivery.postDetails.address}" id="address" class="address"/>
+        </div>
+
+
+        <button type="submit" onclick="confirmInfo()">[[#{order.checkout}]]</button>
     </form>
 </div>
+
+
+<!--<button type="button" onclick="confirmInfo()"></button>-->
+
+<script>
+    function show1() {
+        document.getElementById('div2').style.display = 'none';
+        document.getElementById('div1').style.display = 'block';
+    }
+
+    function show2() {
+        document.getElementById('div1').style.display = 'none';
+        document.getElementById('div2').style.display = 'block';
+    }
+</script>
+<script>
+    const cityOptions = document.querySelector("#city-options");
+    const postOptions = document.querySelector("#post-options");
+
+    cityOptions.addEventListener('input', function () {
+        const city = cityOptions.value;
+        postOptions.innerHTML = '';
+
+        const API_KEY = 'd2f1d924423a9a17e82873f4e6922804';
+        const LIMIT = 555;
+        const API_URL = `https://api.novaposhta.ua/v2.0/json/`;
+
+        fetch(API_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                modelName: 'Address',
+                calledMethod: 'getWarehouses',
+                methodProperties: {
+                    CityName: city,
+                    Limit: LIMIT
+                },
+                apiKey: API_KEY
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                data.data.forEach(entry => {
+                    addPostOption(entry.Description);
+                });
+            })
+            .catch(error => console.error(error));
+    });
+
+    function addPostOption(description) {
+        const option = document.createElement('option');
+        option.value = description;
+        option.textContent = description;
+        postOptions.appendChild(option);
+    }
+
+    function confirmInfo() {
+        selectElement = document.querySelector('#city-options');
+        var city = selectElement.value;
+        // document.querySelector('.city').textContent = city;
+
+        selectElement = document.querySelector('#post-options');
+        var index = selectElement.value;
+        // document.querySelector('.index').textContent = index;
+
+        var addressField = 'NovaPoshta';
+
+
+        // var fieldNameValue = "newFieldName";
+        // var inputField = document.querySelector("input[th\\:field]");
+        // inputField.setAttribute("th:field", "*{" + fieldNameValue + "}");
+
+
+        $('#city').val(city);
+        $('#index').val(index);
+        $('#address').val(addressField);
+
+        // var cityField = document.querySelector('#Ncity');
+        // cityField.setAttribute("th:field", "${" + city + "}");
+        //
+        // var indexField = document.querySelector('#Nindex');
+        // indexField.setAttribute("th:field", "${" + city + "}");
+        //
+        // var addressFieldValue = 'NovaPoshta';
+        // var addressField = document.querySelector('#Naddress');
+        // addressField.setAttribute("th:field", "${" + addressFieldValue + "}");
+
+    }
+</script>
 
 
 </body>

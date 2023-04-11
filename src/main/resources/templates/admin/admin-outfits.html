@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin [[#{menu.outfits}]]</title>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+    <a th:href="@{/admin/outfits/new-outfit}">New</a>
+</div>
+
+<div th:each="outfit, iStat : ${outfitPage.content}">
+    <a th:href="@{/admin/outfits/{id}(id=${outfit.id})}">
+        <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="100px"
+             th:alt="${outfit.outfitTitles['__${language.id}__']}">
+        <br>
+        <span th:text="*{outfit.outfitTitles['__${language.id}__']}">title</span>
+        <b><span th:text="*{outfit.price}">price</span></b>
+    </a>
+    <div>
+        <form th:method="DELETE" th:action="@{/admin/outfits/{id}(id=${outfit.id})}">
+            <input type="submit" value="Удалить Комплект">
+        </form>
+    </div>
+</div>
+<br>
+
+<div th:if="${outfitPage.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/outfits(size=${outfitPage.size}, page=${pageNumber})}"
+       th:text="${pageNumber}"
+       th:class="${pageNumber==outfitPage.number + 1} ? active"></a>
+</div>
+
+
+<hr>
+
+<!--<form th:method="GET" th:action="@{/products/search}" th:object="${searchEntityDTO}">-->
+<!--    <label for="title">Keyword</label>-->
+<!--    <input type="text" th:field="${searchEntityDTO.title}" id="title"/>-->
+<!--    <br>-->
+<!--    <div>Price Range</div>-->
+<!--    <input type="number" id="priceMin"-->
+<!--           th:field="${searchEntityDTO.priceRange.min}"-->
+<!--           th:min="${searchEntityDTO.priceRange.min}"-->
+<!--           th:max="${searchEntityDTO.priceRange.max}"-->
+<!--           th:value="${searchEntityDTO.priceRange.min}"/>-->
+
+<!--    <input type="number" id="priceMax"-->
+<!--           th:field="${searchEntityDTO.priceRange.max}"-->
+<!--           th:min="${searchEntityDTO.priceRange.min}"-->
+<!--           th:max="${searchEntityDTO.priceRange.max}"-->
+<!--           th:value="${searchEntityDTO.priceRange.max}"/>-->
+
+<!--    <div>-->
+<!--        <div>Category:</div>-->
+<!--        <div th:each="category : ${categories}">-->
+<!--            <input type="checkbox" th:field="${searchEntityDTO.categories}" name="category" th:value="${category.id}">-->
+<!--            <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <div>Filters:</div>-->
+<!--        <div th:each="filter : ${filters}">-->
+<!--            <div th:text="${filter.filterTitles['__${language.id}__']}"></div>-->
+<!--            <div th:each="attribute : ${filter.attributes}">-->
+<!--                <input type="checkbox" th:field="${searchEntityDTO.attributes}" name="attribute"-->
+<!--                       th:value="${attribute.id}">-->
+<!--                <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <input type="submit" value="Filter"/>-->
+<!--    </div>-->
+<!--</form>-->
+
+
+</body>
+</html>

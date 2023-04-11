@@ -35,6 +35,7 @@
                     <td><a th:href="@{/}">[[#{menu.home}]]</a></td>
                     <td><a th:href="@{/categories}">[[#{menu.categories}]]</a></td>
                     <td><a th:href="@{/products}">[[#{menu.products}]]</a></td>
+                    <td><a th:href="@{/outfits}">[[#{menu.outfits}]]</a></td>
 
 
                     <td sec:authorize="isAuthenticated()">
@@ -42,7 +43,6 @@
                     </td>
                     <td sec:authorize="isAuthenticated()">
                         <a th:href="@{/orders}">[[#{menu.orders}]]</a>
-
                     </td>
 
                     <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">

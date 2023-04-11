@@ -18,11 +18,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
     }
 
@@ -41,22 +41,28 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers("/admin", "/admin/**").hasAnyAuthority(Role.ADMIN.name(), Role.SUPERADMIN.name())
                 .requestMatchers("/profile").authenticated()
+                .requestMatchers("/bucket", "/bucket/**").authenticated()
+                .requestMatchers("/orders", "/orders/**").authenticated()
+                .requestMatchers("/resources/static/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/")
-                    .failureUrl("/login-error")
-                    .loginProcessingUrl("/auth")
-                    .permitAll()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/")
+                .failureUrl("/login-error")
+                .loginProcessingUrl("/auth")
+                .permitAll()
                 .and()
-                    .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/").deleteCookies("JSESSIONID")
-                    .invalidateHttpSession(true)
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/").deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
                 .and()
-                    .csrf().disable();
+                .csrf().disable();
         return http.build();
     }
+
+
+
 
 //    @Bean
 //    public WebMvcConfigurer corsConfigurer() {
