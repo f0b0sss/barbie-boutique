@@ -19,7 +19,8 @@ VALUES (1), --DollSize     Curve
        (2), --DollSize     Tall
        (3), --DollSize     MTM (Default)
        (4), --Material     Sewn
-       (5); --Material     Knitted
+       (5), --Material     Knitted
+       (6); --DollSize     Petite
 ALTER SEQUENCE attribute_seq RESTART WITH 6;
 
 INSERT INTO filter_attributes (filter_id, attribute_id)
@@ -27,7 +28,8 @@ VALUES (1, 1),
        (1, 2),
        (1, 3),
        (2, 4),
-       (2, 5);
+       (2, 5),
+       (1, 6);
 
 INSERT INTO attribute_titles_translator (attribute_id, title, attribute_titles_key)
 VALUES (1, 'Curve', 1),
@@ -44,4 +46,7 @@ VALUES (1, 'Curve', 1),
        (4, 'Sewn', 3),
        (5, 'Knitted', 1),
        (5, 'Knitted', 2),
-       (5, 'Knitted', 3);
+       (5, 'Knitted', 3),
+       (6, 'Petite', 1),
+       (6, 'Petite', 2),
+       (6, 'Petite', 3);

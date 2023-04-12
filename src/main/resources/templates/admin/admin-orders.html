@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
+    <title>[[#{menu.orders}]]</title>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
@@ -11,17 +11,27 @@
 </head>
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
-<div th:if="${not #lists.isEmpty(orders)}">
-    <table border="1" align="center">
-        <tr>
-            <th>id</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Sum</th>
-            <th></th>
-            <th></th>
-        </tr>
+
+<ul th:each="status : ${orderStatuses}">
+<!--    <li th:if="${not #strings.equals(status, 'NEW')}">-->
+    <li>
+        <a th:href="@{/admin/orders(status=${status})}" th:text="${status}">link</a>
+    </li>
+
+</ul>
+
+<hr>
+<table border="1" align="center">
+    <tr>
+        <th>[[#{order.table.row.Order}]]</th>
+        <th>[[#{order.table.row.CreatedDate}]]</th>
+        <th>[[#{order.table.row.Status}]]</th>
+        <th>[[#{order.table.row.Sum}]]</th>
+        <th></th>
+    </tr>
+    <span th:unless="${#lists.isEmpty(orders)}">
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}">id</td>
             <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
@@ -29,18 +39,13 @@
             <td th:text="${order.sum}">sum</td>
 
             <td>
-                <a th:href="@{/orders/{id}(id=${order.id})}">
-                    Detail
+                <a th:href="@{/admin/orders/{id}(id=${order.id})}">
+                     [[#{order.details}]]
                 </a>
             </td>
-
         </tr>
-    </table>
-</div>
-<div th:unless="${not #lists.isEmpty(orders)}">
-    <p>no one orders</p>
-</div>
-
+    </span>
+</table>
 
 
 </body>

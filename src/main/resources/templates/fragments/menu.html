@@ -12,19 +12,25 @@
         <td align="center">
             <table>
                 <tr>
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=uk}">ua</a></td>-->
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=ru}">ru</a></td>-->
-<!--                    <td><a th:href="@{__${#httpServletRequest.requestURI}__?lang=en}">en</a></td>-->
-                    <td><a th:href="@{?lang=uk}">ua</a></td>
-                    <td><a th:href="@{?lang=ru}">ru</a></td>
-                    <td><a th:href="@{?lang=en}">en</a></td>
-
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'uk').toUriString()}">ua
+                        </a></td>
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'ru').toUriString()}">ru
+                        </a></td>
+                    <td>
+                        <a th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                           th:href="${urlBuilder.replaceQueryParam('lang', 'en').toUriString()}">en
+                        </a></td>
 
 
                     <td>Menu -></td>
                     <td><a th:href="@{/}">[[#{menu.home}]]</a></td>
                     <td><a th:href="@{/categories}">[[#{menu.categories}]]</a></td>
                     <td><a th:href="@{/products}">[[#{menu.products}]]</a></td>
+                    <td><a th:href="@{/outfits}">[[#{menu.outfits}]]</a></td>
 
 
                     <td sec:authorize="isAuthenticated()">
@@ -32,10 +38,9 @@
                     </td>
                     <td sec:authorize="isAuthenticated()">
                         <a th:href="@{/orders}">[[#{menu.orders}]]</a>
-
                     </td>
 
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin}">Admin</a>
                     </td>
                 </tr>
@@ -45,22 +50,21 @@
 
             <div sec:authorize="isAuthenticated()">
                 <div>
-                    Hello,
-                    <a th:href="@{/users/profile}">
-                        <span sec:authentication="principal.username">Bill</span>
+                    <a th:href="@{/profile}">
+                        <span sec:authentication="principal.username">username</span>
                     </a>
                 </div>
                 <div>
-                    <a th:href="@{/logout}">Logout</a>
+                    <a th:href="@{/logout}">[[#{menu.logout}]]</a>
                 </div>
             </div>
 
             <div sec:authorize="!isAuthenticated()">
                 <div>
-                    Hello, Unknown, Please <a th:href="@{/login}">Login</a>
+                    <a th:href="@{/login}">[[#{menu.login}]]</a>
                 </div>
                 <div>
-                    <a th:href="@{/signin}">Sign in</a>
+                    <a th:href="@{/signin}">[[#{menu.signIn}]]</a>
                 </div>
             </div>
 

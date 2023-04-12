@@ -26,7 +26,11 @@ public class Image {
     private Long size;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] bytes;
+
+//    @Lob
+//    private String image;
 
     public Long getId() {
         return id;
@@ -75,6 +79,15 @@ public class Image {
     public void setBytes(byte[] bytes) {
         this.bytes = bytes;
     }
+
+    //    public String getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(String image) {
+//        this.image = image;
+//    }
+
 
     @Override
     public boolean equals(Object o) {

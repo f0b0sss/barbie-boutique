@@ -2,21 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
+    <title>[[#{menu.orders}]]</title>
 </head>
 <body>
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
 <table border="1" align="center">
     <tr>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Sum</th>
+        <th>[[#{order.table.row.CreatedDate}]]</th>
+        <th>[[#{order.table.row.Status}]]</th>
+        <th>[[#{order.table.row.Sum}]]</th>
     </tr>
 
     <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
@@ -28,30 +23,32 @@
 
 <table border="1" align="center">
     <tr>
-        <th>Pic</th>
-        <th>name</th>
-        <th>price</th>
+        <th>[[#{order.table.row.ProductId}]]</th>
+        <th></th>
+        <th>[[#{order.table.row.ProductName}]]</th>
+        <th>[[#{order.table.row.ProductPrice}]]</th>
     </tr>
 
     <tr th:each="detail : ${order.details}">
+        <td th:text="${detail.product.id}">id</td>
         <td>
-            <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
-                 th:alt="${detail.product.productTitles['__${language.id}__']}">
+            <a th:href="@{/products/{id}(id=${detail.product.id})}">
+                <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
+                     th:alt="${detail.product.productTitles['__${language.id}__']}">
+            </a>
         </td>
-
-        <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
+        <td>
+            <a th:href="@{/products/{id}(id=${detail.product.id})}">
+                <div th:text="${detail.product.productTitles['__${language.id}__']}">
+                    productTitles
+                </div>
+            </a>
+        </td>
         <td th:text="${detail.product.price}">price</td>
 
-        <div th:if="${#strings.equals(order.status, 'NEW')}">
-            <td>
-                <form th:method="DELETE" th:action="@{/orders/{id}/{product_id}(id=${order.id}, product_id=${detail.id})}">
-                    <input type="submit" th:value="#{bucket.button.cancel}">
-                </form>
-            </td>
-        </div>
     </tr>
-
 </table>
+
 
 </body>
 </html>

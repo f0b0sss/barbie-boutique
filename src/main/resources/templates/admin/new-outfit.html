@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+
+
+<form th:method="POST" th:action="@{/admin/outfits}" th:object="${outfit}" enctype="multipart/form-data">
+    <table align="center">
+        <div th:each="entry : ${outfit.outfitTitles.entrySet()}">
+            <div>
+                <label th:for="*{outfitTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
+                <input type="text" th:field="*{outfitTitles['__${entry.key.id}__']}"/>
+            </div>
+        </div>
+
+        <div th:each="product : ${products}">
+            <input type="checkbox" th:field="${outfit.products}" name="products" th:value="${product.id}">
+            <span th:text="${product.productTitles['__${language.id}__']}">title</span>
+        </div>
+
+        <div>
+            <div>Images</div>
+            <input type="file" name="files" multiple="multiple">
+        </div>
+
+        <div>
+            <input type="submit" value="Add"/>
+        </div>
+
+    </table>
+</form>
+
+</body>
+</html>

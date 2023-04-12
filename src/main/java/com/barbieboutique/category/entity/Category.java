@@ -81,6 +81,6 @@ public class Category {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, categoryTitles, parentCategory);
+        return Objects.hash(id, categoryTitles, image, parentCategory);
     }
 }

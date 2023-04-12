@@ -33,12 +33,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void save(Category category, MultipartFile file) {
-        Image previousImage = null;
+        Image previousImage = new Image();
         Image newImage = new Image();
 
-
         if (category.getId() == null){
-            System.out.println("i1");
             if (!file.isEmpty()){
                 newImage = utils.getImagesFromMultipart(file);
             }
@@ -50,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
                 category.setImage(previousImage);
             }else {
                 newImage = utils.getImagesFromMultipart(file);
-                
+
                 category.setImage(newImage);
             }
         }
@@ -72,12 +70,12 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findAll();
 
         categories.stream()
-                        .forEach(category -> {
-                            if (category.getParentCategory() != null &&
-                                    category.getParentCategory().getId() == id){
-                                category.setParentCategory(null);
-                            }
-                        });
+                .forEach(category -> {
+                    if (category.getParentCategory() != null &&
+                            category.getParentCategory().getId() == id) {
+                        category.setParentCategory(null);
+                    }
+                });
 
         categoryRepository.saveAll(categories);
 

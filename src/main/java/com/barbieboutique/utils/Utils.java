@@ -48,10 +48,12 @@ public class Utils {
     private Image convertMultipartToImage(MultipartFile file) {
         Image image = null;
 
+        String filename = UUID.randomUUID().toString();
+
         try {
             image = Image.builder()
                     .name(file.getName())
-                    .originalFileName(file.getOriginalFilename())
+                    .originalFileName(filename)
                     .contentType(file.getContentType())
                     .size(file.getSize())
                     .bytes(file.getBytes())

@@ -5,7 +5,7 @@ import com.barbieboutique.category.entity.Category;
 import com.barbieboutique.filter.entity.Attribute;
 import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.language.entity.Language;
-import com.barbieboutique.product.entity.comment.Comment;
+import com.barbieboutique.comment.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +35,9 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "product_titles_translator",
-            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(
+                    name = "product_id",
+                    referencedColumnName = "id")})
     @MapKeyColumn(name = "code")
     @Column(name = "title")
     private Map<Language, String> productTitles;
@@ -66,15 +68,14 @@ public class Product {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Image previewImage;
 
     private boolean available;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "product_comments",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     public Long getId() {

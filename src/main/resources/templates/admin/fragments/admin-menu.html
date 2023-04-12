@@ -12,19 +12,22 @@
         <td align="center">
             <table>
                 <tr>
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/products}">Products</a>
                     </td>
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                        <a th:href="@{/admin/outfits}">Outfits</a>
+                    </td>
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/categories}">Categories</a>
                     </td>
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/filters}">Filters</a>
                     </td>
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
-                        <a th:href="@{/admin/orders}">New Orders</a>
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                        <a th:href="@{/admin/orders?status=CREATED}">Orders</a>
                     </td>
-                    <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
                         <a th:href="@{/admin/users}">Users</a>
                     </td>
                 </tr>

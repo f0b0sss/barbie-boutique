@@ -2,11 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script src="/webjars/jquery/jquery.min.js"></script>
+    <title>[[#{menu.orders}]]</title>
+<!--    <script src="/webjars/sockjs-client/sockjs.min.js"></script>-->
+<!--    <script src="/webjars/stomp-websocket/stomp.min.js"></script>-->
+<!--    <script src="/webjars/jquery/jquery.min.js"></script>-->
 
 </head>
 <body>
@@ -14,9 +13,9 @@
 
 <table border="1" align="center">
     <tr>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Sum</th>
+        <th>[[#{order.table.row.CreatedDate}]]</th>
+        <th>[[#{order.table.row.Status}]]</th>
+        <th>[[#{order.table.row.Sum}]]</th>
         <th></th>
         <th></th>
     </tr>
@@ -25,17 +24,24 @@
         <td th:text="${order.status}">status</td>
         <td th:text="${order.sum}">sum</td>
 
-        <td>
-            <a th:href="@{/orders/{id}(id=${order.id})}">
-                Detail
+        <td th:if="${order.status.name() == 'NEW'}">
+            <a th:href="@{/orders/{id}/checkout(id=${order.id})}">
+                [[#{order.checkout}]]
             </a>
         </td>
 
-        <td>
+        <td th:unless="${order.status.name() == 'NEW'}">
+            <a th:href="@{/orders/{id}(id=${order.id})}">
+                [[#{order.details}]]
+            </a>
+        </td>
+
+        <td th:if="${order.status.name() == 'NEW'}">
             <form th:method="DELETE" th:action="@{/orders/{id}(id=${order.id})}">
                 <input type="submit" th:value="#{bucket.button.cancel}">
             </form>
         </td>
+
     </tr>
 </table>
 
