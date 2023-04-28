@@ -14,13 +14,13 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 <div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
-    <a th:href="@{/admin/categories/{id}/new-category(id=${category.id})}">New Category</a>
+    <a th:href="@{/templates/admin/categories/{id}/new-category(id=${category.id})}">New Category</a>
 </div>
 
 <br>
 
 
-<form th:action="@{/admin/categories/{id}(id=${category.id})}" th:object="${category}" th:method="PUT" enctype="multipart/form-data">
+<form th:action="@{/templates/admin/categories/{id}(id=${category.id})}" th:object="${category}" th:method="PUT" enctype="multipart/form-data">
 
     <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
          th:alt="${category.categoryTitles['__${language.id}__']}">
@@ -58,14 +58,14 @@
 <hr>
 
 <div th:each="category : ${subCategories}">
-    <a th:href="@{/admin/categories/{id}(id=${category.id})}">
+    <a th:href="@{/templates/admin/categories/{id}(id=${category.id})}">
         <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
              th:alt="${category.categoryTitles['__${language.id}__']}">
         <br>
         <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/admin/categories/{id}(id=${category.id})}">
+        <form th:method="DELETE" th:action="@{/templates/admin/categories/{id}(id=${category.id})}">
             <input type="submit" value="Удалить Категорию">
         </form>
     </div>

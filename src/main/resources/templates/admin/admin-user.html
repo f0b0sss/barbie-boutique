@@ -13,7 +13,7 @@
 <div th:insert="~{fragments/menu :: #nav-menu}"></div>
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
-<form th:action="@{/admin/users/{id}(id=${userDTO.id})}" th:object="${userDTO}" th:method="PUT">
+<form th:action="@{/templates/admin/users/{id}(id=${userDTO.id})}" th:object="${userDTO}" th:method="PUT">
 
     <input type="text" th:field="*{firstname}"/> <br>
     <input type="text" th:field="*{lastname}"/><br>

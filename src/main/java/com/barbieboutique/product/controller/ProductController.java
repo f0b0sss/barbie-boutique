@@ -43,23 +43,6 @@ public class ProductController {
     @Autowired
     private Utils utils;
 
-//    @GetMapping
-//    public String products(Model model) {
-//        Language language = utils.getCurrentLanguage();
-//
-//        List<Product> products = productService.getALL();
-//        List<Category> categories = categoryService.getALL();
-//        List<Filter> filters = filterService.getALL();
-//
-//        model.addAttribute("products", products);
-//        model.addAttribute("language", language);
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("filters", filters);
-//
-//        return "products";
-//    }
-
-
     @GetMapping
     public String products(Model model,
                            @RequestParam("page") Optional<Integer> page,
@@ -68,9 +51,9 @@ public class ProductController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
         Page<Product> productPage = productService.findAll(PageRequest.of(currentPage - 1, pageSize));
+        List<Category> categories = categoryService.getALL();
 
         BigDecimal minPrice = productService.minPrice();
         BigDecimal maxPrice = productService.maxPrice();

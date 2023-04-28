@@ -45,6 +45,4 @@ spring:
 #          ssl:
 #            trust: smtp.gmail.com
 
-nova-poshta:
-  apiKey: 74a159b9a949bf7812fb704b9522370c
-  url: https://api.novaposhta.ua/v2.0/json/
+novaPoshtaApiKey: 74a159b9a949bf7812fb704b9522370c

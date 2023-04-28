@@ -13,7 +13,7 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 
-<form th:method="POST" th:action="@{/admin/outfits}" th:object="${outfit}" enctype="multipart/form-data">
+<form th:method="POST" th:action="@{/templates/admin/outfits}" th:object="${outfit}" enctype="multipart/form-data">
     <table align="center">
         <div th:each="entry : ${outfit.outfitTitles.entrySet()}">
             <div>

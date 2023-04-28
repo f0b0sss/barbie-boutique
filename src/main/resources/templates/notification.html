@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title th:text="${notification.title}">title</title>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+  <title th:text="${notification.title}">title</title>
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
 
-<h1 th:text="${notification.header}">header</h1>
+<h3 class="text-center" th:text="${notification.header}">header</h3>
+<h5 th:text="${notification.message}">message</h5>
 
-<p th:text="${notification.message}">message</p>
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
 
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

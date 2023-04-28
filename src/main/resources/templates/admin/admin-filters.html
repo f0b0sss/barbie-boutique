@@ -15,16 +15,16 @@
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/new-filter}">New Filter</a>
+    <a th:href="@{/templates/admin/new-filter}">New Filter</a>
 </div>
 
 
 <div th:each="filter : ${filters}">
-    <a th:href="@{/admin/filters/{id}(id=${filter.id})}">
+    <a th:href="@{/templates/admin/filters/{id}(id=${filter.id})}">
         <span th:text="*{filter.filterTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/admin/filters/{id}(id=${filter.id})}">
+        <form th:method="DELETE" th:action="@{/templates/admin/filters/{id}(id=${filter.id})}">
             <input type="submit" value="Удалить Filter">
         </form>
     </div>

@@ -11,11 +11,11 @@
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/outfits/new-outfit}">New</a>
+    <a th:href="@{/templates/admin/outfits/new-outfit}">New</a>
 </div>
 
 <div th:each="outfit, iStat : ${outfitPage.content}">
-    <a th:href="@{/admin/outfits/{id}(id=${outfit.id})}">
+    <a th:href="@{/templates/admin/outfits/{id}(id=${outfit.id})}">
         <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="100px"
              th:alt="${outfit.outfitTitles['__${language.id}__']}">
         <br>
@@ -23,7 +23,7 @@
         <b><span th:text="*{outfit.price}">price</span></b>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/admin/outfits/{id}(id=${outfit.id})}">
+        <form th:method="DELETE" th:action="@{/templates/admin/outfits/{id}(id=${outfit.id})}">
             <input type="submit" value="Удалить Комплект">
         </form>
     </div>

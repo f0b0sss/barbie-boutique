@@ -17,7 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     List<Product> findAllByCategories(Category category);
 
-
     //for searching API
     @Query(value = "SELECT min(price) FROM Product")
     BigDecimal minPrice();

@@ -29,6 +29,8 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
+
+
     @Autowired
     public UserDetailsService userDetailsService;
 
@@ -41,6 +43,8 @@ public class UserController {
     @PostAuthorize("isAuthenticated()")
     public String profile(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
+
+
 
         UpdateUserDTO updateUserDTO = UpdateUserDTO.builder()
                 .id(user.getId())

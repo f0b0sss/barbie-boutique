@@ -1,157 +1,192 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>[[#{order.checkout}]]</title>
     <style>
-        body {
-            font-family: arial;
-        }
-
         .hide {
             display: none;
         }
-
-        p {
-            font-weight: bold;
-        }
     </style>
-
-
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
 
-<table border="1" align="center">
-    <tr>
-        <th>[[#{order.table.row.CreatedDate}]]</th>
-        <th>[[#{order.table.row.Sum}]]</th>
-    </tr>
+<!--    <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>-->
 
-    <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
-    <td th:text="${order.sum}">sum</td>
-</table>
-
-<table border="1" align="center">
-    <tr>
-        <th>[[#{order.table.row.ProductId}]]</th>
-        <th></th>
-        <th>[[#{order.table.row.ProductName}]]</th>
-        <th>[[#{order.table.row.ProductPrice}]]</th>
-    </tr>
-
-    <tr th:each="detail : ${order.details}">
-        <td th:text="${detail.product.id}">id</td>
-        <td>
-            <a th:href="@{/products/{id}(id=${detail.product.id})}">
-                <img th:src="@{/image/{id}(id=${detail.product.previewImage.id})}" height="60px"
-                     th:alt="${detail.product.productTitles['__${language.id}__']}">
-            </a>
-        </td>
-
-        <td th:text="${detail.product.productTitles['__${language.id}__']}">productTitles</td>
-        <td th:text="${detail.product.price}">price</td>
-
-        <div th:if="${#strings.equals(order.status, 'NEW')}">
-            <td>
-                <form th:method="DELETE"
-                      th:action="@{/orders/{id}/{product_id}(id=${order.id}, product_id=${detail.id})}">
-                    <input type="submit" th:value="#{bucket.button.cancel}">
-                </form>
-            </td>
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="index.html"><i class="fa fa-home"></i>[[#{menu.home}]]</a>
+                    <span>[[#{order.checkout}]]</span>
+                </div>
+            </div>
         </div>
-    </tr>
-</table>
-
-<div>
-    <form th:method="POST" th:action="@{/orders/{id}/checkout(id=${order.id})}" th:object="${delivery}">
-
-        <fieldset>
-            <legend>[[#{checkout.contactInfo}]]</legend>
-            <br>
-            <label for="firstname">[[#{registration.firstname}]]: </label>
-            <input type="text" required th:field="${delivery.order.user.firstname}" id="firstname"/>
-            <br>
-            <label for="lastname">[[#{registration.lastname}]]: </label>
-            <input type="text" required th:field="${delivery.order.user.lastname}" id="lastname"/>
-            <br>
-            <label for="email">[[#{registration.email}]]: </label>
-            <input type="text" required th:field="${delivery.order.user.email}" id="email"/>
-            <br>
-            <label for="phone">[[#{registration.phone}]]: </label>
-            <input type="text" required th:field="${delivery.order.user.phone}" id="phone"/>
-        </fieldset>
-
-
-        <div>[[#{checkout.delivery.method}]]</div>
-        <div>
-            <input type="radio" th:field="${delivery.postDetails.postMethod}" id="novaPoshta" name="postMethod"
-                   th:value="#{checkout.delivery.method.novaPoshta}" onclick="show1();">
-            <span th:text="#{checkout.delivery.method.novaPoshta}">title</span>
-        </div>
-        <div>
-            <input type="radio" th:field="${delivery.postDetails.postMethod}" id="ukrPoshta" name="postMethod"
-                   th:value="#{checkout.delivery.method.urkPoshta}" onclick="show2();">
-            <span th:text="#{checkout.delivery.method.urkPoshta}">title</span>
-        </div>
-        <div id="div1" class="hide">
-            <hr>
-            <p>[[#{checkout.delivery.method.novaPoshta}]]</p>
-
-            <label for="city-options">[[#{text.novaposhta.enter.cityName}]]:</label>
-            <input type="text" id="city-options" placeholder="Назва населеного пункту">
-            <br>
-            <label for="post-options">[[#{text.novaposhta.enter.Warehouses}]]:</label>
-            <select class="one" id="post-options"></select>
-
-            <!--                <select id="select_oblast">-->
-            <!--                    <option value="">choose your location</option>-->
-            <!--                    <span th:each="address : ${area.data}">-->
-            <!--                    <option th:text="${address.Description}" th:value="${address.Description}">location</option>-->
-            <!--                    </span>-->
-            <!--                </select>-->
-
-            <!--                <select id="select_city">-->
-            <!--                    <option value="">choose your city</option>-->
-            <!--                    <span th:each="city : ${settlement.data}">-->
-            <!--                    <option th:text="${city.Description}" th:value="${city.Description}">city</option>-->
-            <!--                    </span>-->
-            <!--                </select>-->
-        </div>
-
-        <div id="div2" class="hide">
-            <hr>
-            <p>[[#{checkout.delivery.method.urkPoshta}]]</p>
-            <br>
-            <label for="city">[[#{checkout.delivery.city}]]: </label>
-            <input type="text" required th:field="${delivery.postDetails.city}" id="city" class="city"/>
-            <br>
-            <label for="index">[[#{checkout.delivery.index}]]: </label>
-            <input type="text" required th:field="${delivery.postDetails.postIndex}" id="index" class="index"/>
-            <br>
-            <label for="address">[[#{checkout.delivery.address}]]: </label>
-            <input type="text" required th:field="${delivery.postDetails.address}" id="address" class="address"/>
-        </div>
-
-
-        <button type="submit" onclick="confirmInfo()">[[#{order.checkout}]]</button>
-    </form>
+    </div>
 </div>
+<!-- Breadcrumb End -->
 
+
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <form class="checkout__form" th:method="POST" th:action="@{/orders/{id}/checkout(id=${order.id})}"
+              th:object="${delivery}">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>[[#{checkout.contactInfo}]]</h5>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>[[#{registration.firstname}]] <span>*</span></p>
+                                <input type="text" required th:field="${delivery.order.user.firstname}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>[[#{registration.lastname}]] <span>*</span></p>
+                                <input type="text" required th:field="${delivery.order.user.lastname}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>[[#{registration.email}]] <span>*</span></p>
+                                <input type="text" required th:field="${delivery.order.user.email}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>[[#{registration.phone}]] <span>*</span></p>
+                                <input type="tel" required th:field="${delivery.order.user.phone}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="checkout__order">
+                        <h5>[[#{order.yourOrderTitle}]]</h5>
+                        <div class="checkout__order__product">
+                            <ul>
+                                <li>
+                                    <span class="top__text">[[#{order.table.row.Product}]]</span>
+                                    <span class="top__text__right">[[#{bucket.cardTotal}]]</span>
+                                </li>
+                                <li>
+                                    <ul th:each="detail : ${order.details}">
+                                        <li>
+                                            <th:block th:text="${detail.product.productTitles['__${language.id}__']}">
+                                                title
+                                            </th:block>
+                                            <span th:text="${detail.price + ' UAH'}">$ 300.0</span>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="checkout__order__total">
+                            <ul>
+                                <li>[[#{bucket.cardTotal}]] <span th:text="${order.sum + ' UAH'}">$ 750.0</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <h5>[[#{checkout.delivery.method}]]</h5>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="checkout__form__input mr-2" for="novaPoshta">
+                                <p th:text="#{checkout.delivery.method.novaPoshta}">title</p>
+                            </label>
+                            <input type="radio"
+                                   th:field="${delivery.postDetails.postMethod}" id="novaPoshta" name="postMethod"
+                                   th:value="#{checkout.delivery.method.novaPoshta}" onclick="showNovaPoshta();">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="checkout__form__input mr-2" for="ukrPoshta">
+                                <p th:text="#{checkout.delivery.method.urkPoshta}">title</p>
+                            </label>
+                            <input type="radio"
+                                   th:field="${delivery.postDetails.postMethod}" id="ukrPoshta" name="postMethod"
+                                   th:value="#{checkout.delivery.method.urkPoshta}" onclick="showUkrPoshta();">
+                        </div>
+                    </div>
+                    <div id="showNovaPoshta" class="hide">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="checkout__form__input">
+                                    <p>[[#{text.novaposhta.enter.cityName}]] <span>*</span></p>
+                                    <input type="text" id="city-options">
+                                    <p>[[#{text.novaposhta.enter.Warehouses}]] <span>*</span></p>
+                                    <select class="form-select" id="post-options"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="showUkrPoshta" class="hide">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="checkout__form__input">
+                                    <p>[[#{checkout.delivery.city}]] <span>*</span></p>
+                                    <input type="text" required th:field="${delivery.postDetails.city}" id="city"
+                                           class="city"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="checkout__form__input">
+                                    <p>[[#{checkout.delivery.index}]]: <span>*</span></p>
+                                    <input type="text" required th:field="${delivery.postDetails.postIndex}" id="index"
+                                           class="index"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="checkout__form__input">
+                                    <p>[[#{checkout.delivery.address}]]: <span>*</span></p>
+                                    <input type="text" required th:field="${delivery.postDetails.address}" id="address"
+                                           class="address"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="site-btn mt-4" onclick="confirmInfo()">
+                    [[#{bucket.button.createOrder}]]
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Checkout Section End -->
 
 <!--<button type="button" onclick="confirmInfo()"></button>-->
 
 <script>
-    function show1() {
-        document.getElementById('div2').style.display = 'none';
-        document.getElementById('div1').style.display = 'block';
+    function showNovaPoshta() {
+        document.getElementById('showUkrPoshta').style.display = 'none';
+        document.getElementById('showNovaPoshta').style.display = 'block';
     }
 
-    function show2() {
-        document.getElementById('div1').style.display = 'none';
-        document.getElementById('div2').style.display = 'block';
+    function showUkrPoshta() {
+        document.getElementById('showNovaPoshta').style.display = 'none';
+        document.getElementById('showUkrPoshta').style.display = 'block';
     }
 </script>
 <script>
@@ -162,7 +197,8 @@
         const city = cityOptions.value;
         postOptions.innerHTML = '';
 
-        const API_KEY = 'd2f1d924423a9a17e82873f4e6922804';
+
+        const API_KEY = '[[${apiKey}]]';
         const LIMIT = 555;
         const API_URL = `https://api.novaposhta.ua/v2.0/json/`;
 
@@ -198,34 +234,15 @@
     function confirmInfo() {
         selectElement = document.querySelector('#city-options');
         var city = selectElement.value;
-        // document.querySelector('.city').textContent = city;
 
         selectElement = document.querySelector('#post-options');
         var index = selectElement.value;
-        // document.querySelector('.index').textContent = index;
 
         var addressField = 'NovaPoshta';
-
-
-        // var fieldNameValue = "newFieldName";
-        // var inputField = document.querySelector("input[th\\:field]");
-        // inputField.setAttribute("th:field", "*{" + fieldNameValue + "}");
-
 
         $('#city').val(city);
         $('#index').val(index);
         $('#address').val(addressField);
-
-        // var cityField = document.querySelector('#Ncity');
-        // cityField.setAttribute("th:field", "${" + city + "}");
-        //
-        // var indexField = document.querySelector('#Nindex');
-        // indexField.setAttribute("th:field", "${" + city + "}");
-        //
-        // var addressFieldValue = 'NovaPoshta';
-        // var addressField = document.querySelector('#Naddress');
-        // addressField.setAttribute("th:field", "${" + addressFieldValue + "}");
-
     }
 </script>
 

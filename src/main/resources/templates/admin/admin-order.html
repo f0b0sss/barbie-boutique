@@ -9,7 +9,7 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 
-<form th:action="@{/admin/orders/{id}(id=${order.id})}" th:object="${order}" th:method="PUT">
+<form th:action="@{/templates/admin/orders/{id}(id=${order.id})}" th:object="${order}" th:method="PUT">
     <table border="1" align="center">
         <tr>
             <th>[[#{order.table.row.User}]]</th>

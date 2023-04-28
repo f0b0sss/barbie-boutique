@@ -15,18 +15,18 @@
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/categories/{id}/new-category(id=0)}">New Category</a>
+    <a th:href="@{/templates/admin/categories/{id}/new-category(id=0)}">New Category</a>
 </div>
 
 <div th:each="category : ${categories}">
-    <a th:href="@{/admin/categories/{id}(id=${category.id})}">
+    <a th:href="@{/templates/admin/categories/{id}(id=${category.id})}">
         <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
              th:alt="${category.categoryTitles['__${language.id}__']}">
         <br>
         <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/admin/categories/{id}(id=${category.id})}">
+        <form th:method="DELETE" th:action="@{/templates/admin/categories/{id}(id=${category.id})}">
             <input type="submit" value="Удалить Категорию">
         </form>
     </div>

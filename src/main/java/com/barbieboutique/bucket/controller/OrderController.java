@@ -11,6 +11,7 @@ import com.barbieboutique.user.entity.User;
 import com.barbieboutique.user.service.UserService;
 import com.barbieboutique.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.SimpleMailMessage;
@@ -41,6 +42,9 @@ public class OrderController {
     private MessageSource messages;
     @Autowired
     private JavaMailSender mailSender;
+
+    @Value("${novaPoshtaApiKey}")
+    private String API_KEY;
 
     @GetMapping
     public String orders(Model model, Principal principal) {
@@ -95,6 +99,7 @@ public class OrderController {
         model.addAttribute("language", language);
         model.addAttribute("order", order);
         model.addAttribute("delivery", delivery);
+        model.addAttribute("apiKey", API_KEY);
 
         return "checkout";
     }

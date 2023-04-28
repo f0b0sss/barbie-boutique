@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/bucket", "/bucket/**").authenticated()
                 .requestMatchers("/orders", "/orders/**").authenticated()
-                .requestMatchers("/resources/static/**").permitAll()
+                .requestMatchers("/css/**", "/img/**", "/js/**", "/fonts/**", "/sass/**", "/Source/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
@@ -60,19 +60,4 @@ public class SecurityConfig {
                 .csrf().disable();
         return http.build();
     }
-
-
-
-
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedMethods("*");
-//            }
-//        };
-//    }
-
 }

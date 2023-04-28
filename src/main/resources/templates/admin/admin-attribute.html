@@ -14,7 +14,7 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 <p>filter title</p>
-<form th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
+<form th:action="@{/templates/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
       th:object="${attribute}" th:method="PUT">
     <div th:each="entry : ${attribute.attributeTitles.entrySet()}">
         <div>

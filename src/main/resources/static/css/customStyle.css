@@ -1,0 +1,76 @@
+/*  common start  */
+.error-message {
+    color: red;
+}
+
+/*  common end  */
+
+
+/*  login form start  */
+.login-container {
+    margin-top: 2%;
+    /*margin-bottom: 5%;*/
+}
+
+.login-container form {
+    padding: 5%;
+}
+
+/*  login form end  */
+
+
+/*  filters bar start  */
+.filter-title {
+    margin-bottom: 25px;
+}
+
+.filter-title h6 {
+    color: #111;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.filter-title input {
+    height: 30px;
+    width: 100%;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #444444;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+}
+
+.filter-title-attributes {
+    margin-bottom: 10px;
+}
+
+.filter-title-attributes h6 {
+    color: #111;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.filter-title-attributes input {
+    height: 30px;
+    width: 100%;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #444444;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+}
+
+.price input {
+    height: 30px;
+    width: 65px;
+    padding-left: 5px;
+    font-size: 14px;
+    color: #444444;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+/*  filters bar end  */

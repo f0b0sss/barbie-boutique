@@ -17,7 +17,7 @@
 <ul th:each="status : ${orderStatuses}">
 <!--    <li th:if="${not #strings.equals(status, 'NEW')}">-->
     <li>
-        <a th:href="@{/admin/orders(status=${status})}" th:text="${status}">link</a>
+        <a th:href="@{/templates/admin/orders(status=${status})}" th:text="${status}">link</a>
     </li>
 
 </ul>
@@ -39,7 +39,7 @@
             <td th:text="${order.sum}">sum</td>
 
             <td>
-                <a th:href="@{/admin/orders/{id}(id=${order.id})}">
+                <a th:href="@{/templates/admin/orders/{id}(id=${order.id})}">
                      [[#{order.details}]]
                 </a>
             </td>

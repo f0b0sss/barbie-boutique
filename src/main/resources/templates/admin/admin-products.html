@@ -15,19 +15,19 @@
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/products/new-product}">New</a>
+    <a th:href="@{/templates/admin/products/new-product}">New</a>
 </div>
 
 
 <div th:each="product : ${products}">
-    <a th:href="@{/admin/products/{id}(id=${product.id})}">
+    <a th:href="@{/templates/admin/products/{id}(id=${product.id})}">
         <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
              th:alt="${product.productTitles['__${language.id}__']}">
         <br>
         <span th:text="*{product.productTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/admin/products/{id}(id=${product.id})}">
+        <form th:method="DELETE" th:action="@{/templates/admin/products/{id}(id=${product.id})}">
             <input type="submit" value="Удалить Продукт">
         </form>
     </div>

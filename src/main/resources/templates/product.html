@@ -1,82 +1,147 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title th:text="*{product.productTitles['__${language.id}__']}"></title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
 
 
-<div>
-    <div>Category</div>
-    <span th:each="category : ${categories}">
-        <a th:href="@{/categories/{id}(id=${category.id})}">
-            <span th:text="*{category.categoryTitles['__${language.id}__']}">categoryTitles</span>
-        </a>
-    </span>
-</div>
-
-<hr>
-
-
-<img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
-     th:alt="${product.productTitles['__${language.id}__']}"><br>
-<br>
-<span th:text="*{product.productTitles['__${language.id}__']}">title</span>
-<br>
-<div>
-    <div>[[#{product.price}]]</div>
-    <div th:text="${product.price}"></div>
-</div>
-<td><a th:href="@{/products/{id}/card(id=${product.id})}">[[#{product.button.addToCard}]]</a></td>
-
-<hr>
-<div>
-    <div>Filters:</div>
-    <div th:each="attribute, stat : ${product.attributes}">
-        <div th:each="filter, stat : ${filters}">
-            <div th:each="att : ${filter.attributes}">
-                <div th:if="${attribute.id == att.id}">
-                    <span th:text="${filter.filterTitles['__${language.id}__']}"> </span>
-                    :
-                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="index.html"><i class="fa fa-home"></i>[[#{menu.home}]]</a>
+                    <span th:each="category : ${categories}">
+                        <a th:href="@{/categories/{id}(id=${category.id})}">
+                            <span th:text="*{category.categoryTitles['__${language.id}__']}">categoryTitles</span>
+                        </a>
+                     </span>
+                    <span th:text="${product.productTitles['__${language.id}__']}">title</span>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 </div>
+<!-- Breadcrumb End -->
 
-<hr>
-<div>
+<!-- Product Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__left product__thumb nice-scroll">
 
-    <div th:each="image, stat : ${images}">
-        <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
-             th:alt="${product.productTitles['__${language.id}__']}"><br>
+                        <div th:each="image, stat : ${images}">
+                            <a class="pt" href="#product-1">
+                                <img th:src="@{/image/{id}(id=${image.id})}"
+                                     th:alt="${product.productTitles['__${language.id}__']}">
+                            </a>
+                        </div>
+                        <!--                        <a class="pt active" href="#product-2">-->
+                        <!--                            <img src="img/product/details/thumb-2.jpg" alt="">-->
+                        <!--                        </a>-->
+                    </div>
+
+                    <div class="product__details__slider__content">
+                        <div class="product__details__pic__slider owl-carousel">
+                            <div th:each="image, stat : ${images}">
+                                <img th:src="@{/image/{id}(id=${image.id})}"
+                                     th:alt="${product.productTitles['__${language.id}__']}"
+                                     data-hash="product-1" class="product__big__img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product__details__text">
+                    <h3 th:text="*{product.productTitles['__${language.id}__']}">title</h3>
+                    <!--                    <div class="product__details__price">$ 75.0 <span>$ 83.0</span></div>-->
+                    <div class="product__details__price" th:text="${product.price + ' UAH'}">$ 75.0<span>$ 83.0</span>
+                    </div>
+
+                    <div class="product__details__button">
+                        <a th:href="@{/products/{id}/card(id=${product.id})}" class="cart-btn">
+                            <span class="icon_cart_alt"></span> [[#{product.button.addToCard}]]
+                        </a>
+                        <ul>
+                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__details__widget">
+                        <div th:each="attribute, stat : ${product.attributes}">
+                            <div th:each="filter, stat : ${filters}">
+                                <div th:each="att : ${filter.attributes}">
+                                    <div th:if="${attribute.id == att.id}">
+                                        <ul>
+                                            <li>
+                                                <span th:text="${filter.filterTitles['__${language.id}__'] + ':'}"></span>
+                                                <p th:text="${attribute.attributeTitles['__${language.id}__']}">
+                                                    title</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row pt-5">
+            <div class="col-lg-12 text-center">
+                <div class="related__title">
+                    <h5>[[#{menu.outfits}]]</h5>
+                </div>
+            </div>
+            <span th:each="outfit : ${outfits}">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                         <div class="product__item__pic set-bg ">
+                            <div class="label new">New</div>
+                                <a th:href="@{/outfits/{id}(id=${outfit.id})}">
+                                    <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}"
+                                         th:alt="${outfit.outfitTitles['__${language.id}__']}">
+                                </a>
+                            </div>
+                            <div class="product__item__text">
+                            <h6>
+                                <a th:href="@{/outfits/{id}(id=${outfit.id})}"
+                                   th:text="*{outfit.outfitTitles['__${language.id}__']}">title
+                                </a>
+                            </h6>
+                            <div class="product__price" th:text="*{outfit.price}">price</div>
+                         </div>
+                    </div>
+                </div>
+            </span>
+        </div>
     </div>
-
-</div>
-
-<hr>
-<div th:each="outfit : ${outfits}">
-    <a th:href="@{/outfits/{id}(id=${outfit.id})}">
-        <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="60px"
-             th:alt="${outfit.outfitTitles['__${language.id}__']}">
-        <br>
-        <span th:text="*{outfit.outfitTitles['__${language.id}__']}">title</span>
-        <b><span th:text="*{outfit.price}">price</span></b>
-    </a>
-</div>
+</section>
+<!-- Product Details Section End -->
 
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
 
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

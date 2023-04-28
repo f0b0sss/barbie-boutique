@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title th:text="*{category.categoryTitles['__${language.id}__']}"></title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
 </head>
-<body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
 
+<body>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
 
 <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
 

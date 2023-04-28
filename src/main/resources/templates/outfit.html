@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Информация про продукт</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+<title>[[#{menu.outfits}]] !!!!!!!!!!!!!</title> 
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
+
 
 
 <div>
@@ -48,5 +52,12 @@
 
 
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

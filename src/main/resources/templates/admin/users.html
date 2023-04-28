@@ -15,7 +15,7 @@
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/users/new-user}">New User</a>
+    <a th:href="@{/templates/admin/users/new-user}">New User</a>
 </div>
 
 <table border="1">
@@ -36,9 +36,9 @@
         <td th:text="${user.email}"></td>
         <td th:text="${user.phone}"></td>
         <td th:text="${user.role}"></td>
-        <td><a th:href="@{/admin/users/{id}(id=${user.id})}">info</a></td>
+        <td><a th:href="@{/templates/admin/users/{id}(id=${user.id})}">info</a></td>
         <td>
-            <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.id})}">
+            <form th:method="DELETE" th:action="@{/templates/admin/users/{id}(id=${user.id})}">
                 <input type="submit" value="del">
             </form>
         </td>

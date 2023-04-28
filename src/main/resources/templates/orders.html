@@ -1,49 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>[[#{menu.orders}]]</title>
-<!--    <script src="/webjars/sockjs-client/sockjs.min.js"></script>-->
-<!--    <script src="/webjars/stomp-websocket/stomp.min.js"></script>-->
-<!--    <script src="/webjars/jquery/jquery.min.js"></script>-->
-
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
 
-<table border="1" align="center">
-    <tr>
-        <th>[[#{order.table.row.CreatedDate}]]</th>
-        <th>[[#{order.table.row.Status}]]</th>
-        <th>[[#{order.table.row.Sum}]]</th>
-        <th></th>
-        <th></th>
-    </tr>
-    <tr th:each="order : ${orders}">
-        <td th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
-        <td th:text="${order.status}">status</td>
-        <td th:text="${order.sum}">sum</td>
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="index.html"><i class="fa fa-home"></i>[[#{menu.home}]]</a>
+                    <span>[[#{menu.orderList}]]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
 
-        <td th:if="${order.status.name() == 'NEW'}">
-            <a th:href="@{/orders/{id}/checkout(id=${order.id})}">
-                [[#{order.checkout}]]
-            </a>
-        </td>
+<!-- Shop Cart Section Begin -->
+<section class="shop-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop__cart__table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>[[#{order.table.row.CreatedDate}]]</th>
+                            <th>[[#{order.table.row.Status}]]</th>
+                            <th>[[#{order.table.row.Sum}]]</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="order : ${orders}">
+                        <tr>
+                            <td class="cart__product__item" th:text="${#temporals.format(order.created,'dd MMMM yyyy HH:mm')}">created</td>
+                            <td class="cart__quantity" th:text="${order.status}">status</td>
+                            <td class="cart__price" th:text="${order.sum}">sum</td>
 
-        <td th:unless="${order.status.name() == 'NEW'}">
-            <a th:href="@{/orders/{id}(id=${order.id})}">
-                [[#{order.details}]]
-            </a>
-        </td>
+                            <td th:if="${order.status.name() == 'NEW'}">
+                                <a th:href="@{/orders/{id}/checkout(id=${order.id})}">
+                                    [[#{order.checkout}]]
+                                </a>
+                            </td>
 
-        <td th:if="${order.status.name() == 'NEW'}">
-            <form th:method="DELETE" th:action="@{/orders/{id}(id=${order.id})}">
-                <input type="submit" th:value="#{bucket.button.cancel}">
-            </form>
-        </td>
+                            <td th:unless="${order.status.name() == 'NEW'}">
+                                <a th:href="@{/orders/{id}(id=${order.id})}">
+                                    [[#{order.details}]]
+                                </a>
+                            </td>
 
-    </tr>
-</table>
+                            <td class="cart__close" th:if="${order.status.name() == 'NEW'}">
+                                <form th:method="DELETE" th:action="@{/orders/{id}(id=${order.id})}">
+                                    <button class="icon_close" type="submit"></button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Cart Section End -->
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

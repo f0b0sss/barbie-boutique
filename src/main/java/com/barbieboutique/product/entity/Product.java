@@ -42,6 +42,21 @@ public class Product {
     @Column(name = "title")
     private Map<Language, String> productTitles;
 
+    @ElementCollection
+    @CollectionTable(name = "product_description_translator",
+            joinColumns = {@JoinColumn(
+                    name = "product_id",
+                    referencedColumnName = "id")})
+    @MapKeyColumn(name = "code")
+    @Column(name = "description")
+    private Map<Language, String> description;
+
+    @ManyToMany
+    @JoinTable(name = "product_products",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> products;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),

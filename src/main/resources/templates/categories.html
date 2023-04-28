@@ -1,16 +1,120 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>[[#{menu.categories}]]</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
 </head>
+
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/header :: #header-fragment}"></div>
+
+<!-- Categories Section Begin -->
+<section class="categories">
+    <div class="container-fluid">
+        <div class="row">
+            <!--            <div class="col-lg-6 p-0">-->
+            <!--                <div class="categories__item categories__large__item set-bg"-->
+            <!--                     data-setbg="img/categories/category-1.jpg">-->
+            <!--                    <div class="categories__text">-->
+            <!--                        <h1>Women’s fashion</h1>-->
+            <!--                        <p>Sitamet, consectetur adipiscing elit, sed do eiusmod tempor incidid-unt labore-->
+            <!--                            edolore magna aliquapendisse ultrices gravida.</p>-->
+            <!--                        <a href="#">Shop now</a>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-2.jpg">
+                            <div class="categories__text">
+                                <h4>Men’s fashion</h4>
+                                <p>358 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-3.jpg">
+                            <div class="categories__text">
+                                <h4>Kid’s fashion</h4>
+                                <p>273 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-4.jpg">
+                            <div class="categories__text">
+                                <h4>Cosmetics</h4>
+                                <p>159 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-5.jpg">
+                            <div class="categories__text">
+                                <h4>Accessories</h4>
+                                <p>792 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-2.jpg">
+                            <div class="categories__text">
+                                <h4>Men’s fashion</h4>
+                                <p>358 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-3.jpg">
+                            <div class="categories__text">
+                                <h4>Kid’s fashion</h4>
+                                <p>273 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-4.jpg">
+                            <div class="categories__text">
+                                <h4>Cosmetics</h4>
+                                <p>159 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-5.jpg">
+                            <div class="categories__text">
+                                <h4>Accessories</h4>
+                                <p>792 items</p>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+
 
 
 <div th:each="category : ${categories}">
@@ -22,5 +126,12 @@
     </a>
 </div>
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

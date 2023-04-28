@@ -14,7 +14,7 @@
 <div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
 
 
-<form th:action="@{/admin/outfits/{id}(id=${outfit.id})}" th:object="${outfit}" th:method="PUT"
+<form th:action="@{/templates/admin/outfits/{id}(id=${outfit.id})}" th:object="${outfit}" th:method="PUT"
       enctype="multipart/form-data">
     <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}" height="60px"
          th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
@@ -38,7 +38,7 @@
             <img th:src="@{/image/{id}(id=${image.id})}" height="60px"
                  th:alt="${outfit.outfitTitles['__${language.id}__']}"><br>
             <input type="radio" th:field="${outfit.previewImage}" name="previewImage" th:value="${image.id}">
-            <a th:href="@{/admin/outfits/{outfit_id}/images/{image_id}(outfit_id=${outfit.id}, image_id=${image.id})}">Удалить
+            <a th:href="@{/templates/admin/outfits/{outfit_id}/images/{image_id}(outfit_id=${outfit.id}, image_id=${image.id})}">Удалить
                 image</a>
         </div>
     </div>
@@ -53,7 +53,7 @@
 
 <hr>
 <div th:each="product : ${outfit.products}">
-    <a th:href="@{/admin/products/{id}(id=${product.id})}">
+    <a th:href="@{/templates/admin/products/{id}(id=${product.id})}">
         <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
              th:alt="${product.productTitles['__${language.id}__']}">
         <br>
