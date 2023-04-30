@@ -1,37 +1,201 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <title>Admin Products</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="/webjars/jquery/jquery.min.js"></script>
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+    <title>Admin Products</title>
 
 </head>
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
-<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
-
-
-<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/templates/admin/products/new-product}">New</a>
-</div>
+<div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
 
 <div th:each="product : ${products}">
-    <a th:href="@{/templates/admin/products/{id}(id=${product.id})}">
+    <a th:href="@{/admin/products/{id}(id=${product.id})}">
         <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="60px"
              th:alt="${product.productTitles['__${language.id}__']}">
         <br>
         <span th:text="*{product.productTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/templates/admin/products/{id}(id=${product.id})}">
-            <input type="submit" value="Удалить Продукт">
-        </form>
+
     </div>
 </div>
 
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="shop__sidebar">
+                    <div class="product__details__button" sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                        <a th:href="@{/admin/products/new-product}" class="site-btn">
+                            New
+                        </a>
+                    </div>
+                    <form th:method="GET" th:action="@{/admin/products/search}" th:object="${searchEntityDTO}">
+                        <div class="shop__sidebar">
+                            <div class="section-title">
+                                <h4>[[#{filters.bar.title}]]</h4>
+                            </div>
+
+                            <div class="filter-title">
+                                <h6>[[#{filters.by.keyword}]]</h6>
+                                <input type="text" th:field="${searchEntityDTO.title}" id="title"/>
+                            </div>
+
+                            <div class="filter-title">
+                                <h6>[[#{filters.by.price}]]</h6>
+                                <div class="price">
+                                    <input type="number" id="priceMin"
+                                           th:field="${searchEntityDTO.priceRange.min}"
+                                           th:min="${searchEntityDTO.priceRange.min}"
+                                           th:max="${searchEntityDTO.priceRange.max}"
+                                           th:value="${searchEntityDTO.priceRange.min}"/>
+                                    <input type="number" id="priceMax"
+                                           th:field="${searchEntityDTO.priceRange.max}"
+                                           th:min="${searchEntityDTO.priceRange.min}"
+                                           th:max="${searchEntityDTO.priceRange.max}"
+                                           th:value="${searchEntityDTO.priceRange.max}"/>
+                                </div>
+                            </div>
+
+                            <div class="sidebar__categories">
+                                <div class="filter-title-attributes">
+                                    <h6>[[#{menu.categories}]]</h6>
+                                </div>
+                                <div class="categories__accordion">
+                                    <div class="accordion" id="accordionExample">
+                                        <span th:each="parentCtegory : ${categories}">
+                                            <span th:if="${parentCtegory.parentCategory == null}">
+                                                <div class="card">
+                                                    <div class="card-heading active">
+                                                        <a data-toggle="collapse" data-target="#collapseOne"
+                                                           th:text="${parentCtegory.categoryTitles['__${language.id}__']}">parentTitle
+                                                        </a>
+                                                    </div>
+                                                    <div id="collapseOne" class="collapse show"
+                                                         data-parent="#accordionExample">
+                                                         <span th:each="childCategory : ${categories}">
+                                                             <span th:if="${childCategory.parentCategory == parentCtegory}">
+                                                                <div class="card-body">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <label th:for="${childCategory.categoryTitles['__${language.id}__']}">
+                                                                                <input type="checkbox"
+                                                                                       name="category"
+                                                                                       th:id="${childCategory.categoryTitles['__${language.id}__']}"
+                                                                                       th:field="${searchEntityDTO.categories}"
+                                                                                       th:value="${childCategory.id}">
+                                                                                   <span th:text="${childCategory.categoryTitles['__${language.id}__']}">title</span>
+                                                                                <span class="checkmark"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar__categories" th:each="filter : ${filters}">
+                                <div class="filter-title-attributes">
+                                    <h6 th:text="${filter.filterTitles['__${language.id}__']}"></h6>
+                                </div>
+                                <div th:each="attribute : ${filter.attributes}">
+                                    <input type="checkbox" th:field="${searchEntityDTO.attributes}" name="attribute"
+                                           th:value="${attribute.id}">
+                                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center pb-4">
+                            <button type="submit" class="site-btn">[[#{filters.button.apply}]]</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-md-9">
+                <div class="row">
+
+                    <span th:each="product : ${productPage.content}">
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                 <div class="product__item__pic set-bg ">
+                                     <div class="label new">New</div>
+                                     <a th:href="@{/admin/products/{id}(id=${product.id})}">
+                                        <img th:src="@{/image/{id}(id=${product.previewImage.id})}"
+                                             th:alt="${product.productTitles['__${language.id}__']}">
+                                     </a>
+                                     <ul class="product__hover">
+                                         <li>
+                                             <a href="#">
+                                                 <span class="icon_heart_alt"></span>
+                                             </a>
+                                         </li>
+                                         <li>
+                                             <a href="#">
+                                                 <span class="icon_cart_alt"></span>
+                                             </a>
+                                         </li>
+                                         <li>
+                                             <form th:method="DELETE" th:action="@{/admin/products/{id}(id=${product.id})}">
+                                                 <button type="submit" class="icon_close"></button>
+                                             </form>
+                                         </li>
+                                     </ul>
+                                 </div>
+                                <div class="product__item__text">
+                                    <h6>
+                                        <a th:href="@{/admin/products/{id}(id=${product.id})}"
+                                           th:text="*{product.productTitles['__${language.id}__']}">title
+                                        </a>
+                                    </h6>
+                                    <div class="product__price" th:text="*{product.price}">price</div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+
+
+                    <div class="col-lg-12 text-center">
+                        <div class="pagination__option">
+                            <span th:if="${productPage.totalPages > 1}" th:each="pageNumber : ${pageNumbers}">
+                                <a th:href="@{/admin/products(size=${productPage.size}, page=${pageNumber})}"
+                                   th:text="${pageNumber}"
+                                   th:class="${pageNumber==productPage.number + 1} ? active">
+                                </a>
+                            </span>
+                            <a th:if="${productPage.totalPages > 1}" href="#"><i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Section End -->
+
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

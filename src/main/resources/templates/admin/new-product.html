@@ -1,85 +1,224 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Add Product</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/webjars/jquery/jquery.min.js"></script>
+
 
 </head>
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
-<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
 
-<form th:method="POST" th:action="@{/templates/admin/products}" th:object="${product}" enctype="multipart/form-data">
-    <table align="center">
-        <div th:each="entry : ${product.productTitles.entrySet()}">
-            <div>
-                <label th:for="*{productTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
-                <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"/>
-            </div>
-        </div>
 
-        <div>
-            <div>Price</div>
-            <input type="text" th:field="*{price}" id="price">
-        </div>
-
-
-        <div>
-            <div>Images</div>
-            <input type="file" name="files" multiple="multiple">
-        </div>
-
-        <div>
-            <div>Category:</div>
-            <div th:each="category : ${categories}">
-                <input type="checkbox" th:field="*{categories}" name="category" th:value="${category.id}">
-                <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>
-            </div>
-        </div>
-
-        <div>
-            <!--            <div th:each="filter : ${filters}">-->
-            <!--                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>-->
-            <!--                <div th:each="attribute : ${filter.attributes}">-->
-            <!--                    <input type="radio" th:field="${filters}" name="attribute" th:value="*{id}">-->
-            <!--                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>-->
-            <!--                </div>-->
-            <!--            </div>-->
-
-            <div>
-                <div>Filters:</div>
-                <div th:each="filter : ${filters}">
-                    <div th:text="${filter.filterTitles['__${language.id}__']}"></div>
-                    <div th:each="attribute, stat : ${filter.attributes}">
-                        <input type="checkbox" th:field="${product.attributes}" name="attribute"
-                               th:value="${attribute.id}">
-                        <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
-                    </div>
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a th:href="@{/admin}"><i class="fa fa-home"></i>[[#{menu.home}]]</a>
+                    <span>Создание Нового Товара</span>
                 </div>
             </div>
         </div>
-
-        <!--        <div>-->
-        <!--            <div th:each="filter, stat : ${filters}">-->
-        <!--                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>-->
-        <!--                <div th:each="attribute : ${filters['__${stat.index}__'].attributes}">-->
-        <!--                    <input type="radio" th:field="${filters['__${stat.index}__'].attributes}" name="attribute" th:value="*{id}">-->
-        <!--                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
+    </div>
+</div>
+<!-- Breadcrumb End -->
 
 
-        <div>
-            <input type="submit" value="Add"/>
-        </div>
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <form th:method="POST" th:action="@{/admin/products}" th:object="${product}" enctype="multipart/form-data"
+              class="checkout__form">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar">
+                            <div class="sidebar__categories">
+                                <div class="filter-title-attributes">
+                                    <h6>[[#{menu.categories}]]</h6>
+                                </div>
+                                <div class="categories__accordion">
+                                    <div class="accordion" id="accordionExample">
+                                        <span th:each="parentCtegory : ${categories}">
+                                            <span th:if="${parentCtegory.parentCategory == null}">
+                                                <div class="card">
+                                                    <div class="card-heading active">
+                                                        <a data-toggle="collapse" data-target="#collapseOne"
+                                                           th:text="${parentCtegory.categoryTitles['__${language.id}__']}">parentTitle
+                                                        </a>
+                                                    </div>
+                                                    <div id="collapseOne" class="collapse show"
+                                                         data-parent="#accordionExample">
+                                                        <input type="checkbox" name="categories"
+                                                               th:id="${parentCtegory.categoryTitles['__${language.id}__']}"
+                                                               th:field="*{categories}"
+                                                               th:value="${parentCtegory.id}">
+                                                         <span th:each="childCategory : ${categories}">
+                                                             <span class="checkmark"></span>
+                                                             <span th:if="${childCategory.parentCategory == parentCtegory}">
+                                                                <div class="card-body">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <label th:for="${childCategory.categoryTitles['__${language.id}__']}">
+                                                                                <input type="checkbox" name="category"
+                                                                                       th:id="${childCategory.categoryTitles['__${language.id}__']}"
+                                                                                       th:field="${product.categories}"
+                                                                                       th:value="${childCategory.id}">
+                                                                                   <span th:text="${childCategory.categoryTitles['__${language.id}__']}">title</span>
+                                                                                <span class="checkmark"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-    </table>
-</form>
+                            <div class="sidebar__categories" th:each="filter : ${filters}">
+                                <div class="filter-title-attributes">
+                                    <h6 th:text="${filter.filterTitles['__${language.id}__']}"></h6>
+                                </div>
+                                <div th:each="attribute : ${filter.attributes}">
+                                    <input type="checkbox" th:field="${product.attributes}" name="attribute"
+                                           th:value="${attribute.id}">
+                                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>
+                                </div>
+                            </div>
+
+                            <div class="checkout__form__input">
+                                <h5 class="text-center">Цена</h5>
+                                <input type="text" th:field="${product.price}">
+                            </div>
+
+                            <div class="checkout__form__input">
+                                <h5 class="text-center">Добавить фото</h5>
+                                <input type="file" name="files" multiple="multiple">
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="site-btn">Создать</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-md-9">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-center">Название</h5>
+                            <span th:each="entry : ${product.productTitles.entrySet()}">
+                        <div class="checkout__form__input">
+                            <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"
+                                   th:placeholder="${entry.key.title}"/>
+                        </div>
+                    </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-center">Описание</h5>
+                            <span th:each="entry : ${product.descriptions.entrySet()}">
+                                <div class="formProductTextarea">
+                                    <textarea th:field="*{descriptions['__${entry.key.id}__']}"
+                                              th:placeholder="${entry.key.title}">
+                                    </textarea>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Shop Section End -->
+
+
+
+<!--<form th:method="POST" th:action="@{/admin/products}" th:object="${product}" enctype="multipart/form-data">-->
+<!--    <table align="center">-->
+<!--        <div th:each="entry : ${product.productTitles.entrySet()}">-->
+<!--            <div>-->
+<!--                <label th:for="*{productTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>-->
+<!--                <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"/>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <div>Price</div>-->
+<!--            <input type="text" th:field="*{price}" id="price">-->
+<!--        </div>-->
+
+
+<!--        <div>-->
+<!--            <div>Images</div>-->
+<!--            <input type="file" name="files" multiple="multiple">-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <div>Category:</div>-->
+<!--            <div th:each="category : ${categories}">-->
+<!--                <input type="checkbox" th:field="*{categories}" name="category" th:value="${category.id}">-->
+<!--                <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            &lt;!&ndash;            <div th:each="filter : ${filters}">&ndash;&gt;-->
+<!--            &lt;!&ndash;                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <div th:each="attribute : ${filter.attributes}">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <input type="radio" th:field="${filters}" name="attribute" th:value="*{id}">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>&ndash;&gt;-->
+<!--            &lt;!&ndash;                </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--            <div>-->
+<!--                <div>Filters:</div>-->
+<!--                <div th:each="filter : ${filters}">-->
+<!--                    <div th:text="${filter.filterTitles['__${language.id}__']}"></div>-->
+<!--                    <div th:each="attribute, stat : ${filter.attributes}">-->
+<!--                        <input type="checkbox" th:field="${product.attributes}" name="attribute"-->
+<!--                               th:value="${attribute.id}">-->
+<!--                        <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash;        <div>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <div th:each="filter, stat : ${filters}">&ndash;&gt;-->
+<!--        &lt;!&ndash;                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <div th:each="attribute : ${filters['__${stat.index}__'].attributes}">&ndash;&gt;-->
+<!--        &lt;!&ndash;                    <input type="radio" th:field="${filters['__${stat.index}__'].attributes}" name="attribute" th:value="*{id}">&ndash;&gt;-->
+<!--        &lt;!&ndash;                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>&ndash;&gt;-->
+<!--        &lt;!&ndash;                </div>&ndash;&gt;-->
+<!--        &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </div>&ndash;&gt;-->
+
+
+<!--        <div>-->
+<!--            <input type="submit" value="Add"/>-->
+<!--        </div>-->
+
+<!--    </table>-->
+<!--</form>-->
 
 
 <!--<form th:method="POST" th:action="@{/products/new-product}" th:object="${productDTO}" enctype="multipart/form-data">-->
@@ -124,5 +263,12 @@
 
 <!--</form>-->
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

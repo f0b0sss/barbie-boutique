@@ -2,10 +2,10 @@ package com.barbieboutique.product.entity;
 
 
 import com.barbieboutique.category.entity.Category;
+import com.barbieboutique.comment.Comment;
 import com.barbieboutique.filter.entity.Attribute;
 import com.barbieboutique.image.entity.Image;
 import com.barbieboutique.language.entity.Language;
-import com.barbieboutique.comment.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,15 +49,15 @@ public class Product {
                     referencedColumnName = "id")})
     @MapKeyColumn(name = "code")
     @Column(name = "description")
-    private Map<Language, String> description;
+    private Map<Language, String> descriptions;
 
     @ManyToMany
     @JoinTable(name = "product_products",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+            inverseJoinColumns = @JoinColumn(name = "relative_id"))
     private List<Product> products;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -68,6 +68,9 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))
     private List<Attribute> attributes;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     private BigDecimal price;
 
@@ -88,98 +91,12 @@ public class Product {
 
     private boolean available;
 
+    private Integer orderCount;
+
     @OneToMany(
             mappedBy = "product",
             cascade = CascadeType.REMOVE)
     private List<Comment> comments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Map<Language, String> getProductTitles() {
-        return productTitles;
-    }
-
-    public void setProductTitles(Map<Language, String> productTitles) {
-        this.productTitles = productTitles;
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
-
-    public List<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Image getPreviewImage() {
-        return previewImage;
-    }
-
-    public void setPreviewImage(Image previewImage) {
-        this.previewImage = previewImage;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
 
     @Override
     public boolean equals(Object o) {

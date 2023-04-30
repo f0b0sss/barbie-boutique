@@ -7,8 +7,6 @@ CREATE SEQUENCE image_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE language_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE order_details_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE orders_seq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE outfit_seq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE post_method_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE product_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 50;
 CREATE SEQUENCE user_seq START WITH 1 INCREMENT BY 1;
@@ -94,7 +92,9 @@ CREATE TABLE language
 CREATE TABLE order_details
 (
     id         bigint NOT NULL,
+    amount     integer,
     price      numeric(38, 2),
+    total_sum  float(53),
     product_id bigint,
     PRIMARY KEY (id)
 );
@@ -113,30 +113,6 @@ CREATE TABLE orders_details
     order_id  bigint NOT NULL,
     detail_id bigint NOT NULL
 );
-CREATE TABLE outfit_images
-(
-    outfit_id bigint NOT NULL,
-    image_id  bigint NOT NULL
-);
-CREATE TABLE outfit_products
-(
-    product_id bigint NOT NULL,
-    outfit_id  bigint NOT NULL
-);
-CREATE TABLE outfit_titles_translator
-(
-    outfit_id         bigint NOT NULL,
-    title             varchar(255),
-    outfit_titles_key bigint NOT NULL,
-    PRIMARY KEY (outfit_id, outfit_titles_key)
-);
-CREATE TABLE outfits
-(
-    id               bigint NOT NULL,
-    price            numeric(38, 2),
-    preview_image_id bigint,
-    PRIMARY KEY (id)
-);
 CREATE TABLE product_attributes
 (
     product_id   bigint NOT NULL,
@@ -147,10 +123,22 @@ CREATE TABLE product_categories
     product_id  bigint NOT NULL,
     category_id bigint NOT NULL
 );
+CREATE TABLE product_description_translator
+(
+    product_id       bigint NOT NULL,
+    description      varchar(255),
+    descriptions_key bigint NOT NULL,
+    PRIMARY KEY (product_id, descriptions_key)
+);
 CREATE TABLE product_images
 (
     product_id bigint NOT NULL,
     image_id   bigint NOT NULL
+);
+CREATE TABLE product_products
+(
+    product_id  bigint NOT NULL,
+    relative_id bigint NOT NULL
 );
 CREATE TABLE product_titles_translator
 (
@@ -165,7 +153,9 @@ CREATE TABLE products
     available        boolean      NOT NULL,
     created_date     timestamp(6) NOT NULL,
     discount         integer      NOT NULL,
+    order_count      integer,
     price            numeric(38, 2),
+    type             varchar(255),
     preview_image_id bigint,
     PRIMARY KEY (id)
 );
@@ -194,8 +184,6 @@ ALTER TABLE IF EXISTS filter_attributes
     ADD CONSTRAINT UK_4mugernl9utcw56sp2xddabte UNIQUE (attribute_id);
 ALTER TABLE IF EXISTS orders_details
     ADD CONSTRAINT UK_6sksyv2vdyrar27lqfv3esnky UNIQUE (detail_id);
-ALTER TABLE IF EXISTS outfit_images
-    ADD CONSTRAINT UK_fav00mhnbmkpytcxcmdkyy9eu UNIQUE (image_id);
 ALTER TABLE IF EXISTS product_images
     ADD CONSTRAINT UK_faiw41ddc6nywa21m1nodqvy5 UNIQUE (image_id);
 ALTER TABLE IF EXISTS attribute_titles_translator
@@ -236,24 +224,6 @@ ALTER TABLE IF EXISTS orders_details
     ADD CONSTRAINT FK9sr9upt9o7x1oxer4ymb9eppi FOREIGN KEY (detail_id) REFERENCES order_details;
 ALTER TABLE IF EXISTS orders_details
     ADD CONSTRAINT FK5o977kj2vptwo70fu7w7so9fe FOREIGN KEY (order_id) REFERENCES orders;
-ALTER TABLE IF EXISTS outfit_images
-    ADD CONSTRAINT FKssg0hnt6w9vee5uikx6nl1idt FOREIGN KEY (image_id) REFERENCES images;
-ALTER TABLE IF EXISTS outfit_images
-    ADD CONSTRAINT FKrgkcqdv7vk2keh9aid5i9th1a FOREIGN KEY (outfit_id) REFERENCES outfits;
-ALTER TABLE IF EXISTS outfit_products
-    ADD CONSTRAINT FKonqy6qxqsg6tkbdut3dso5cn4 FOREIGN KEY (outfit_id) REFERENCES products;
-ALTER TABLE IF EXISTS outfit_products
-    ADD CONSTRAINT FK1pdr772dj4cgh6sy2cjd576mq FOREIGN KEY (product_id) REFERENCES outfits;
-ALTER TABLE IF EXISTS outfit_titles_translator
-    ADD CONSTRAINT FKth2qieb8y9ondmn4fpqa3dwe9 FOREIGN KEY (outfit_titles_key) REFERENCES language;
-ALTER TABLE IF EXISTS outfit_titles_translator
-    ADD CONSTRAINT FKlb407komaw7ite4u8xq354n2v FOREIGN KEY (outfit_id) REFERENCES outfits;
-ALTER TABLE IF EXISTS outfits
-    ADD CONSTRAINT FKxeowmxtubul7n7qu6m1wpxg6 FOREIGN KEY (preview_image_id) REFERENCES images;
-ALTER TABLE IF EXISTS post_method_titles_translator
-    ADD CONSTRAINT FKkfoxm3ljrh2afgxotbrk5x1mv FOREIGN KEY (post_method_titles_key) REFERENCES language;
-ALTER TABLE IF EXISTS post_method_titles_translator
-    ADD CONSTRAINT FKej18lwvji1dn706d9mughbjom FOREIGN KEY (post_method_id) REFERENCES post_methods;
 ALTER TABLE IF EXISTS product_attributes
     ADD CONSTRAINT FK6ksuorb5567jpa08ihcumumy1 FOREIGN KEY (attribute_id) REFERENCES attributes;
 ALTER TABLE IF EXISTS product_attributes
@@ -262,10 +232,18 @@ ALTER TABLE IF EXISTS product_categories
     ADD CONSTRAINT FKd112rx0alycddsms029iifrih FOREIGN KEY (category_id) REFERENCES categories;
 ALTER TABLE IF EXISTS product_categories
     ADD CONSTRAINT FKlda9rad6s180ha3dl1ncsp8n7 FOREIGN KEY (product_id) REFERENCES products;
+ALTER TABLE IF EXISTS product_description_translator
+    ADD CONSTRAINT FKkedw6xose8ud8kmjaxwhqie2g FOREIGN KEY (descriptions_key) REFERENCES language;
+ALTER TABLE IF EXISTS product_description_translator
+    ADD CONSTRAINT FKb1q10uewpxguwbgv4p6jhnfrj FOREIGN KEY (product_id) REFERENCES products;
 -- ALTER TABLE IF EXISTS product_images
 --     ADD CONSTRAINT FK1j9bvqvvdudsd1ydm4fr0y3bk FOREIGN KEY (image_id) REFERENCES images;
 ALTER TABLE IF EXISTS product_images
     ADD CONSTRAINT FKqnq71xsohugpqwf3c9gxmsuy FOREIGN KEY (product_id) REFERENCES products;
+ALTER TABLE IF EXISTS product_products
+    ADD CONSTRAINT FK4pyiqj5erwxxcmefjn0ttx1pi FOREIGN KEY (relative_id) REFERENCES products;
+ALTER TABLE IF EXISTS product_products
+    ADD CONSTRAINT FKmcqokn4u442u60kon9of3ue02 FOREIGN KEY (product_id) REFERENCES products;
 ALTER TABLE IF EXISTS product_titles_translator
     ADD CONSTRAINT FK5olltnll9nec79edbua8a0mxd FOREIGN KEY (product_titles_key) REFERENCES language;
 ALTER TABLE IF EXISTS product_titles_translator

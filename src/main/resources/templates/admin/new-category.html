@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Add Category</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/webjars/jquery/jquery.min.js"></script>
+
 
 </head>
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
-<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
 
-<form th:method="POST" th:action="@{/templates/admin/categories}" th:object="${category}" enctype="multipart/form-data">
+<form th:method="POST" th:action="@{/admin/categories}" th:object="${category}" enctype="multipart/form-data">
     <table align="center">
         <div th:each="entry : ${category.categoryTitles.entrySet()}">
             <div>
@@ -44,5 +48,12 @@
     </table>
 </form>
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

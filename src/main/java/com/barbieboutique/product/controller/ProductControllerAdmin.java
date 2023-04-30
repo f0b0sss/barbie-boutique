@@ -10,16 +10,24 @@ import com.barbieboutique.language.entity.Language;
 import com.barbieboutique.language.service.LanguageService;
 import com.barbieboutique.product.entity.Product;
 import com.barbieboutique.product.service.ProductService;
+import com.barbieboutique.searchFilterAPI.PriceRange;
+import com.barbieboutique.searchFilterAPI.SearchEntityDTO;
 import com.barbieboutique.utils.Utils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -33,15 +41,92 @@ public class ProductControllerAdmin {
     private final ImageService imageService;
     private final Utils utils;
 
-
-    @Transactional
     @GetMapping
-    public String products(Model model, HttpServletRequest request) {
-        List<Product> products = productService.findAll();
-        Language language = languageService.getByCode("ru");
+    public String products(Model model,
+                           @RequestParam("page") Optional<Integer> page,
+                           @RequestParam("size") Optional<Integer> size) {
+        Language language = utils.getCurrentLanguage();
 
-        model.addAttribute("products", products);
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        List<Filter> filters = filterService.getALL();
+        Page<Product> productPage = productService.findAll(PageRequest.of(currentPage - 1, pageSize));
+        List<Category> categories = categoryService.getALL();
+
+        BigDecimal minPrice = productService.minPrice();
+        BigDecimal maxPrice = productService.maxPrice();
+        PriceRange priceRange = new PriceRange(minPrice, maxPrice);
+
+        SearchEntityDTO searchEntityDTO = new SearchEntityDTO();
+        searchEntityDTO.setPriceRange(priceRange);
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("productPage", productPage);
         model.addAttribute("language", language);
+        model.addAttribute("categories", categories);
+        model.addAttribute("filters", filters);
+        model.addAttribute("searchEntityDTO", searchEntityDTO);
+
+        return "admin-products";
+    }
+
+    @GetMapping("/search")
+    public String search(@ModelAttribute SearchEntityDTO searchEntityDTO, Model model,
+                         @RequestParam("page") Optional<Integer> page,
+                         @RequestParam("size") Optional<Integer> size) {
+        List<Product> products = productService.findByPriceBetween(
+                searchEntityDTO.getPriceRange().getMin(),
+                searchEntityDTO.getPriceRange().getMax());
+
+        if (searchEntityDTO.getTitle() != null) {
+            List<Product> temp = productService.findByKeyword(searchEntityDTO.getTitle().toLowerCase());
+            products = products.stream()
+                    .filter(temp::contains)
+                    .collect(Collectors.toList());
+        }
+        if (searchEntityDTO.getCategories().size() != 0) {
+            List<Product> temp = productService.findAllByCategoriesIn(searchEntityDTO.getCategories());
+            products = products.stream()
+                    .filter(temp::contains)
+                    .collect(Collectors.toList());
+        }
+        if (searchEntityDTO.getAttributes().size() != 0) {
+            List<Product> temp = productService.findAllByAttributesIn(searchEntityDTO.getAttributes());
+            products = products.stream()
+                    .filter(temp::contains)
+                    .collect(Collectors.toList());
+        }
+
+        Language language = utils.getCurrentLanguage();
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        List<Category> categories = categoryService.getALL();
+        List<Filter> filters = filterService.getALL();
+        Page<Product> productPage = new PageImpl<>(products, PageRequest.of(currentPage - 1, pageSize), products.size());
+
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("language", language);
+        model.addAttribute("categories", categories);
+        model.addAttribute("filters", filters);
+        model.addAttribute("searchEntityDTO", searchEntityDTO);
 
         return "admin-products";
     }
@@ -50,10 +135,11 @@ public class ProductControllerAdmin {
     public String newProduct(Model model) {
         Product product = new Product();
         product.setProductTitles(utils.translatorTemplate());
+        product.setDescriptions(utils.translatorTemplate());
 
         List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
-        Language language = languageService.getByCode("ru");
+        Language language = utils.getCurrentLanguage();
 
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);
@@ -73,9 +159,9 @@ public class ProductControllerAdmin {
 
     @Transactional
     @GetMapping("/{id}")
-    public String editProduct(@PathVariable Long id, Model model) {
+    public String product(@PathVariable Long id, Model model) {
         Product product = productService.getById(id);
-        Language language = languageService.getByCode("ru");
+        Language language = utils.getCurrentLanguage();
         List<Filter> filters = filterService.getALL();
         List<Category> allCategories = categoryService.getALL();
 

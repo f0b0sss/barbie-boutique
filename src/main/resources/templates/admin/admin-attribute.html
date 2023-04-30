@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <title>Edit Attribute</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="/webjars/jquery/jquery.min.js"></script>
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+    <title>Edit Attribute</title>
+
 
 </head>
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
-<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
 <p>filter title</p>
-<form th:action="@{/templates/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
+<form th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
       th:object="${attribute}" th:method="PUT">
     <div th:each="entry : ${attribute.attributeTitles.entrySet()}">
         <div>
@@ -25,5 +28,12 @@
     <button type="submit">Update attribute</button>
 </form>
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

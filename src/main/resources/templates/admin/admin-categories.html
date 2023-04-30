@@ -1,36 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <title>Admin Categories</title>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="/webjars/jquery/jquery.min.js"></script>
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+    <title>Admin Categories</title>
+
 
 </head>
 <body>
-<div th:insert="~{fragments/menu :: #nav-menu}"></div>
-<div th:insert="~{fragments/admin-menu :: #nav-menu}"></div>
+<div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
 
 <div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/templates/admin/categories/{id}/new-category(id=0)}">New Category</a>
+    <a th:href="@{/admin/categories/{id}/new-category(id=0)}">New Category</a>
 </div>
 
 <div th:each="category : ${categories}">
-    <a th:href="@{/templates/admin/categories/{id}(id=${category.id})}">
+    <a th:href="@{/admin/categories/{id}(id=${category.id})}">
         <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
              th:alt="${category.categoryTitles['__${language.id}__']}">
         <br>
         <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
     </a>
     <div>
-        <form th:method="DELETE" th:action="@{/templates/admin/categories/{id}(id=${category.id})}">
+        <form th:method="DELETE" th:action="@{/admin/categories/{id}(id=${category.id})}">
             <input type="submit" value="Удалить Категорию">
         </form>
     </div>
 </div>
 
+<!-- Footer Begin -->
+<div th:insert="~{fragments/footer :: #footer-fragment}"></div>
+<!-- Footer End -->
+
+<!-- Js Plugins -->
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
+
 </html>

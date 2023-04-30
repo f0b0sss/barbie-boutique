@@ -6,9 +6,7 @@ import com.barbieboutique.category.service.CategoryService;
 import com.barbieboutique.filter.entity.Filter;
 import com.barbieboutique.filter.service.FilterService;
 import com.barbieboutique.language.entity.Language;
-import com.barbieboutique.product.entity.Outfit;
 import com.barbieboutique.product.entity.Product;
-import com.barbieboutique.product.service.OutfitService;
 import com.barbieboutique.product.service.ProductService;
 import com.barbieboutique.searchFilterAPI.PriceRange;
 import com.barbieboutique.searchFilterAPI.SearchEntityDTO;
@@ -38,8 +36,6 @@ public class ProductController {
     private FilterService filterService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private OutfitService outfitService;
     @Autowired
     private Utils utils;
 
@@ -113,11 +109,6 @@ public class ProductController {
 
         List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
-//        Page<Product> productPage = productService.findAll(PageRequest.of(currentPage - 1, pageSize));
-
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), products.size());
-//        Page<Product> productPage = new PageImpl<Product>(products.subList(start, end), pageable, products.size());
         Page<Product> productPage = new PageImpl<>(products, PageRequest.of(currentPage - 1, pageSize), products.size());
 
 
@@ -135,100 +126,8 @@ public class ProductController {
         model.addAttribute("filters", filters);
         model.addAttribute("searchEntityDTO", searchEntityDTO);
 
-
-//        Language language = utils.getCurrentLanguage();
-//        ProductSpecification spec1 = new ProductSpecification(new SearchCriteria("price", ">", "35"));
-//
-//        List<Product> products = productService.findAll(spec1);
-//
-////        ProductSpecification spec2 = new ProductSpecification(new SearchCriteria("categories", ":", "Sweters"));
-////
-////        List<Product> products = productService.getALL(Specification.where(spec1).and(spec2));
-//
-//        model.addAttribute("products", products);
-//        model.addAttribute("language", language);
-
         return "products";
     }
-
-//    @GetMapping("/search")
-//    public String search(@ModelAttribute SearchEntityDTO searchEntityDTO, Model model) {
-//        Specification<Product> specification = Specification
-//                .where(ProductSpecification.priceGreaterThanOrEq(searchEntityDTO.getPriceRange().getMin()))
-//                .and(ProductSpecification.priceLesserThanOrEq(searchEntityDTO.getPriceRange().getMax()));
-//
-//        if (searchEntityDTO.getTitle() != null) {
-//            specification.and(ProductSpecification.titleContains(searchEntityDTO.getTitle()));
-//        }
-//
-//        if (searchEntityDTO.getCategories() != null) {
-//
-//        }
-//
-//        if (searchEntityDTO.getAttributes() != null) {
-//
-//        }
-//
-//        System.out.println(productService.findAll(specification).size());
-//
-//
-//        return "products";
-//    }
-
-
-//    @RequestMapping(method = RequestMethod.GET, value = "/users")
-//    @ResponseBody
-//    public List<Product> search(@RequestParam(value = "search") String search) {
-//        ProductSpecificationsBuilder builder = new ProductSpecificationsBuilder();
-//        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-//        Matcher matcher = pattern.matcher(search + ",");
-//        while (matcher.find()) {
-//            builder.with(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4));
-//        }
-//
-//        Specification<Product> spec = builder.build();
-//        return productService.findAll(spec);
-//    }
-
-//    @GetMapping("/search")
-//    public String search(Model model) {
-//        Language language = utils.getCurrentLanguage();
-//
-//        List<Product> products = productService.getALL(spec1);
-//
-//
-//
-//        model.addAttribute("products", products);
-//        model.addAttribute("language", language);
-//
-//        return "products";
-//    }
-//
-//       public String get(
-//            @And({
-//                    @Spec(path = "manufacturer", params = "manufacturer", spec = Like.class),
-//                    @Spec(path = "model", params = "model", spec = Like.class),
-//                    @Spec(path = "country", params = "country", spec = In.class),
-//                    @Spec(path = "type", params = "type", spec = Like.class),
-//                    @Spec(path = "createDate", params = "createDate", spec = Equal.class),
-//                    @Spec(path = "createDate", params = {"createDateGt", "createDateLt"}, spec = Between.class)
-//            }) Specification<Product> spec,
-//            Sort sort,
-//            @RequestHeader HttpHeaders headers) {
-//
-//        final PagingResponse response = get(spec, headers, sort);
-//        return new ResponseEntity<>(response.getElements(), returnHttpHeaders(response), HttpStatus.OK);
-//    }
-//
-//    public PagingResponse get(Specification<Product> spec, HttpHeaders headers, Sort sort) {
-//        if (isRequestPaged(headers)) {
-//            return get(spec, buildPageRequest(headers, sort));
-//        } else {
-//            final List<Product> entities = get(spec, sort);
-//            return new PagingResponse((long) entities.size(), 0L, 0L, 0L, 0L, entities);
-//        }
-//    }
-
 
     @Transactional
     @GetMapping("/{id}")
@@ -238,12 +137,8 @@ public class ProductController {
 
         List<Category> categories = product.getCategories().stream().toList();
         List<Filter> filters = filterService.getALL();
-        List<Outfit> outfits = outfitService.findAllByProductsContaining(product);
-
-//        List<Image> images = product.getImages().stream().toList();
 
         model.addAttribute("product", product);
-        model.addAttribute("outfits", outfits);
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
         model.addAttribute("images",  product.getImages());
@@ -251,12 +146,6 @@ public class ProductController {
 
         return "product";
     }
-
-//    @GetMapping
-//    public ProductDTO sayHEllo(@PathVariable Long id){
-//        Product product = productService.getById(id);
-//        return ProductMapper.MAPPER.toProductDTO(product);
-//    }
 
     @GetMapping("{id}/card")
     public String addToCard(@PathVariable Long id, Principal principal) {
@@ -268,18 +157,5 @@ public class ProductController {
 
         return "redirect:/products/" + id;
     }
-
-
-//
-//    public ResponseEntity<Void> addProduct(ProductDTO productDTO, List<MultipartFile> images){
-//        System.out.println("title - " + productDTO.getTitle());
-//        productService.addProduct(productDTO, images);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
-//    }
-
-//    @MessageMapping("/products")
-//    public void messageProduct(ProductDTO productDTO, List<MultipartFile> images){
-//        productService.addProduct(productDTO, images);
-//    }
 
 }

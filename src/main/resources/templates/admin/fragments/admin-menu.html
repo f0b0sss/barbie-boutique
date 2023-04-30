@@ -3,42 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <title>Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <th:block th:insert="~{fragments/head :: link}"></th:block>
+
+    <!--    Language dropdown with flags-->
+    <link rel="stylesheet" href="/css/flag-icon.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/all.min.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script defer src="/js/bootstrap.bundle.min.js"></script>
+    <script defer src="/js/popper.min.js"></script>
+
+    <script src="/js/jquery.slim.min.js" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
-<body>
+<body id="admin-menu-fragment">
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Offcanvas Menu Begin -->
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__close">+</div>
+    <ul class="offcanvas__widget">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+               th:text="${#strings.toLowerCase(#locale)}">
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item"
+                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                   th:href="${urlBuilder.replaceQueryParam('lang', 'uk').toUriString()}">Ukrainian
+                </a>
+                <a class="dropdown-item"
+                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                   th:href="${urlBuilder.replaceQueryParam('lang', 'en').toUriString()}">English
+                </a>
+                <a class="dropdown-item"
+                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                   th:href="${urlBuilder.replaceQueryParam('lang', 'ru').toUriString()}">Russian
+                </a>
+            </div>
+        </li>
+    </ul>
+    <div class="offcanvas__logo">
+        <a th:href="@{/}"><img src="/img/logo.png" alt=""></a>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+    <div class="offcanvas__auth">
+        <a sec:authorize="isAuthenticated()" th:href="@{/profile}">
+            <span sec:authentication="principal.username">username</span>
+        </a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/logout}">[[#{menu.logout}]]</a>
+
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">[[#{menu.login}]]</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/signin}">[[#{menu.signIn}]]</a>
+    </div>
+</div>
+<!-- Offcanvas Menu End -->
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <div class="header__logo">
+                    <a th:href="@{/}"><img src="/img/logo.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-7">
+                <nav class="header__menu">
+                    <ul>
+                        <li><a th:href="@{/}">[[#{menu.home}]]</a></li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin}">Admin</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin/products}">Products</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin/categories}">Categories</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin/filters}">Filters</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin/orders?status=CREATED}">Orders</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                            <a th:href="@{/admin/users}">Users</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-3">
+                <div class="header__right">
+                    <div class="header__right__auth">
+                        <a sec:authorize="isAuthenticated()"
+                           th:href="@{/profile}"
+                           sec:authentication="principal.username">
+                            username
+                        </a>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}">[[#{menu.logout}]]</a>
+
+                        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">[[#{menu.login}]]</a>
+                        <a sec:authorize="!isAuthenticated()" th:href="@{/signin}">[[#{menu.signIn}]]</a>
+                    </div>
+                    <ul class="header__right__widget">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                               th:text="${#strings.toLowerCase(#locale)}">
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item"
+                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                                   th:href="${urlBuilder.replaceQueryParam('lang', 'uk').toUriString()}">Ukrainian
+                                </a>
+                                <a class="dropdown-item"
+                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                                   th:href="${urlBuilder.replaceQueryParam('lang', 'en').toUriString()}">English
+                                </a>
+                                <a class="dropdown-item"
+                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                                   th:href="${urlBuilder.replaceQueryParam('lang', 'ru').toUriString()}">Russian
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="canvas__open">
+            <i class="fa fa-bars"></i>
+        </div>
+    </div>
+</header>
+<!-- Header Section End -->
 
 
-<table id="nav-menu" width="100%" align="center">
-    <tr>
-        <td align="center">
-            <table>
-                <tr>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/products}">Products</a>
-                    </td>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/outfits}">Outfits</a>
-                    </td>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/categories}">Categories</a>
-                    </td>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/filters}">Filters</a>
-                    </td>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/orders?status=CREATED}">Orders</a>
-                    </td>
-                    <td sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                        <a th:href="@{/templates/admin/users}">Users</a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td align="right">
 
-        </td>
-    </tr>
-</table>
-
-
+<th:block th:insert="~{fragments/js-plugins :: script}"></th:block>
 </body>
 </html>

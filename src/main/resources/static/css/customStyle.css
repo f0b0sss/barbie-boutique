@@ -72,5 +72,32 @@
     border-radius: 10px;
     margin-left: 5px;
 }
-
 /*  filters bar end  */
+
+
+/*  edit product form start  */
+.formProductTextarea textarea {
+    height: 130px;
+    width: 100%;
+    padding-left: 20px;
+    padding-top: 12px;
+    font-size: 14px;
+    color: #444444;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    resize: none;
+}
+
+.formProductTextarea textarea::placeholder {
+     color: #444444;
+ }
+
+.editProduct-images-bar{
+    width: 100%;
+}
+.editProduct-images-bar img{
+    width: 100%;
+}
+/*  edit product form end  */
+

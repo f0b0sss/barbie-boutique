@@ -62,7 +62,7 @@
         </a></li>
     </ul>
     <div class="offcanvas__logo">
-        <a href="./index.html"><img src="/img/logo.png" alt=""></a>
+        <a th:href="@{/}"><img src="/img/logo.png" alt=""></a>
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__auth">
@@ -83,7 +83,7 @@
         <div class="row">
             <div class="col-2">
                 <div class="header__logo">
-                    <a href="../index.html"><img src="/img/logo.png" alt=""></a>
+                    <a th:href="@{/}"><img src="/img/logo.png" alt=""></a>
                 </div>
             </div>
             <div class="col-7">
@@ -92,7 +92,6 @@
                         <li><a th:href="@{/}">[[#{menu.home}]]</a></li>
                         <li><a th:href="@{/categories}">[[#{menu.categories}]]</a></li>
                         <li><a th:href="@{/products}">[[#{menu.products}]]</a></li>
-                        <li><a th:href="@{/outfits}">[[#{menu.outfits}]]</a></li>
 
                         <li sec:authorize="isAuthenticated()">
                             <a th:href="@{/bucket}">[[#{menu.card}]]</a>
@@ -102,7 +101,7 @@
                         </li>
 
                         <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-                            <a th:href="@{/templates/admin}">Admin</a>
+                            <a th:href="@{/admin}">Admin</a>
                         </li>
                     </ul>
                 </nav>

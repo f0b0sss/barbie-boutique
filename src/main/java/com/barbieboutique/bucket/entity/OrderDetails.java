@@ -27,5 +27,9 @@ public class OrderDetails {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private Integer amount;
+
     private BigDecimal price;
+
+    private Double totalSum;
 }
