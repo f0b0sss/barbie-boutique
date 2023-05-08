@@ -21,6 +21,8 @@ public interface ProductService {
 
     Page<Product> findAll(Pageable pageable);
 
+    List<Product> findAllByProductsContaining(Product product);
+
     List<Product> findAllByCategoriesIn(List<Category> categories);
 
     List<Product> findAllByCategories(Category category);
@@ -30,6 +32,8 @@ public interface ProductService {
     void save(Product product, MultipartFile[] files);
 
     Product getById(Long id);
+
+    BigDecimal getPrice(Long id);
 
     void deleteById(Long id);
 

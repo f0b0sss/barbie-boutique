@@ -1,23 +1,23 @@
 INSERT INTO images (id, bytes, content_type, name, original_file_name, size)
-VALUES (4, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
-       (5, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
-       (6, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
-       (7, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178);
-ALTER SEQUENCE image_seq RESTART WITH 8;
+VALUES (6, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (7, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (8, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178),
+       (9, 131790,'image/png','file','2c56c91c-d69c-44d0-97c5-be7ea1abd8c0.png',8178);
+ALTER SEQUENCE image_seq RESTART WITH 10;
 
 INSERT INTO products (id, available, created_date, discount, price, preview_image_id)
-VALUES (1, TRUE, '2023-01-31 23:13:26.875301', 0, 12.00, 4),
-       (2, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 5),
-       (3, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 6),
-       (4, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 7);
+VALUES (1, TRUE, '2023-01-31 23:13:26.875301', 0, 12.00, 6),
+       (2, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 7),
+       (3, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 8),
+       (4, TRUE, '2023-02-03 22:51:00.231878', 0, 30.00, 9);
 ALTER SEQUENCE product_seq RESTART WITH 5;
 
 INSERT INTO product_titles_translator (product_id, title, product_titles_key)
-VALUES (1, 'Сідниця1', 1),
+VALUES (1, 'Спідниця1', 1),
        (1, 'Skirt1', 3),
        (1, 'Юбка1', 2),
 
-       (2, 'Сідниця2', 1),
+       (2, 'Спідниця2', 1),
        (2, 'Юбка2', 2),
        (2, 'Skirt2', 3),
 
@@ -31,10 +31,10 @@ VALUES (1, 'Сідниця1', 1),
 
 
 INSERT INTO product_images (product_id, image_id)
-VALUES (1, 4),
-       (2, 5),
-       (3, 6),
-       (4, 7);
+VALUES (1, 6),
+       (2, 7),
+       (3, 8),
+       (4, 9);
 
 INSERT INTO product_categories (product_id, category_id)
 VALUES (1, 1),

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:insert="~{fragments/meta :: meta}"></th:block>
+    >
 
     <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Edit Attribute</title>
@@ -16,17 +14,33 @@
 <body>
 <div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
-<p>filter title</p>
-<form th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
-      th:object="${attribute}" th:method="PUT">
-    <div th:each="entry : ${attribute.attributeTitles.entrySet()}">
-        <div>
-            <label th:for="*{attributeTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>
-            <input type="text" th:field="*{attributeTitles['__${entry.key.id}__']}"/>
+
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="checkout__form">
+            <div class="row text-center">
+                <div class="col-8">
+                    <h5 class="text-center">Название Фильтра</h5>
+                    <form th:action="@{/admin/filters/{id}/attributes/{att_id}(id=${filterId}, att_id=${attribute.id})}"
+                          th:object="${attribute}" th:method="PUT">
+                        <div th:each="entry : ${attribute.attributeTitles.entrySet()}">
+                            <div class="checkout__form__input">
+                                <input type="text" th:field="*{attributeTitles['__${entry.key.id}__']}"
+                                       th:placeholder="${entry.key.title}"/>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="site-btn">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <button type="submit">Update attribute</button>
-</form>
+</section>
+<!-- Shop Section End -->
+
 
 <!-- Footer Begin -->
 <div th:insert="~{fragments/footer :: #footer-fragment}"></div>

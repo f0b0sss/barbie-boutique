@@ -62,7 +62,7 @@ public class CategoryControllerAdmin {
     public String addCategory(@ModelAttribute Category category, MultipartFile file) {
         categoryService.save(category, file);
 
-        return "redirect:/admin/categories/" + category.getId();
+        return "redirect:/admin/categories";
     }
 
     @Transactional

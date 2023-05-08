@@ -64,7 +64,20 @@
                                                     </div>
                                                     <div id="collapseOne" class="collapse show"
                                                          data-parent="#accordionExample">
-                                                         <span th:each="childCategory : ${categories}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li>
+                                                                    <label th:for="${parentCtegory.categoryTitles['__${language.id}__']}">
+                                                                        <input type="checkbox" name="categories"
+                                                                                       th:id="${parentCtegory.categoryTitles['__${language.id}__']}"
+                                                                                       th:field="*{categories}"
+                                                                                       th:value="${parentCtegory.id}">
+                                                                        <span th:text="${parentCtegory.categoryTitles['__${language.id}__']}">title</span>
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <span th:each="childCategory : ${categories}">
                                                              <span th:if="${childCategory.parentCategory == parentCtegory}">
                                                                 <div class="card-body">
                                                                     <ul>
@@ -113,11 +126,17 @@
                 <div class="row">
 
                     <span th:each="product : ${productPage.content}">
-
                         <div class="col-lg-4 col-md-6">
                             <div class="product__item">
-                                 <div class="product__item__pic set-bg ">
-                                     <div class="label new">New</div>
+                                 <div class="product__item__pic set-bg">
+                                     <div th:with="
+                                     currentYear=${#dates.year(#dates.createNow())},
+                                     currentMonth=${#dates.month(#dates.createNow())},
+                                     productYear=${#temporals.year(product.createdDate)},
+                                     productMonth=${#temporals.month(product.createdDate)}"
+                                          th:if="${currentYear == productYear and currentMonth == productMonth}">
+                                         <div class="label new">New</div>
+                                     </div>
                                      <a th:href="@{/products/{id}(id=${product.id})}">
                                         <img th:src="@{/image/{id}(id=${product.previewImage.id})}"
                                              th:alt="${product.productTitles['__${language.id}__']}">

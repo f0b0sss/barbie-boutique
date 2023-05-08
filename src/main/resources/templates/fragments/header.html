@@ -12,14 +12,14 @@
     <link rel="stylesheet" href="/css/bootstrap-icons.css" type="text/css">
     <link rel="stylesheet" href="/css/all.min.css" type="text/css">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="/css/bootstrap.min.css">-->
     <script defer src="/js/bootstrap.bundle.min.js"></script>
     <script defer src="/js/popper.min.js"></script>
 
     <script src="/js/jquery.slim.min.js" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"-->
+<!--          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
 
 
 </head>
@@ -100,7 +100,7 @@
                             <a th:href="@{/orders}">[[#{menu.orders}]]</a>
                         </li>
 
-                        <li sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
+                        <li sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
                             <a th:href="@{/admin}">Admin</a>
                         </li>
                     </ul>

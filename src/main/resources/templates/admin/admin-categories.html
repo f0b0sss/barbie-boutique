@@ -1,39 +1,63 @@
 <!DOCTYPE html>
-<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:insert="~{fragments/meta :: meta}"></th:block>
 
     <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Admin Categories</title>
-
 
 </head>
 <body>
 <div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="product__details__button text-center"
+                     sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <a th:href="@{/admin/categories/{id}/new-category(id=0)}" class="site-btn">
+                        New Category
+                    </a>
+                </div>
+            </div>
+        </div>
 
-<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/categories/{id}/new-category(id=0)}">New Category</a>
-</div>
-
-<div th:each="category : ${categories}">
-    <a th:href="@{/admin/categories/{id}(id=${category.id})}">
-        <img th:src="@{/image/{id}(id=${category.image.id})}" height="60px"
-             th:alt="${category.categoryTitles['__${language.id}__']}">
-        <br>
-        <span th:text="*{category.categoryTitles['__${language.id}__']}">title</span>
-    </a>
-    <div>
-        <form th:method="DELETE" th:action="@{/admin/categories/{id}(id=${category.id})}">
-            <input type="submit" value="Удалить Категорию">
-        </form>
+        <div class="row">
+            <span th:each="category : ${categories}">
+                <div class="col-lg-4 col-md-6">
+                     <div class="product__item">
+                          <div class="product__item__pic set-bg ">
+                              <a th:href="@{/admin/categories/{id}(id=${category.id})}">
+                                 <img th:src="@{/image/{id}(id=${category.image.id})}"
+                                      th:alt="${category.categoryTitles['__${language.id}__']}">
+                              </a>
+                              <ul class="product__hover">
+                                  <li>
+                                      <form th:method="DELETE"
+                                            th:action="@{/admin/categories/{id}(id=${category.id})}">
+                                          <button type="submit" class="icon_close"></button>
+                                      </form>
+                                  </li>
+                              </ul>
+                          </div>
+                         <div class="product__item__text">
+                             <h6>
+                                  <a th:href="@{/admin/categories/{id}(id=${category.id})}"
+                                     th:text="*{category.categoryTitles['__${language.id}__']}">title
+                                 </a>
+                             </h6>
+                         </div>
+                     </div>
+                </div>
+            </span>
+        </div>
     </div>
-</div>
+</section>
+<!-- Shop Section End -->
 
 <!-- Footer Begin -->
 <div th:insert="~{fragments/footer :: #footer-fragment}"></div>

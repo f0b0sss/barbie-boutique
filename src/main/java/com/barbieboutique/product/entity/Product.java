@@ -69,9 +69,6 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))
     private List<Attribute> attributes;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
-
     private BigDecimal price;
 
     private int discount;

@@ -9,6 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!-- Include the default stylesheet -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.css">
+    <!-- Include plugin -->
+    <script src="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.js"></script>
+
     <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Информация про продукт</title>
 </head>
@@ -30,7 +36,6 @@
     </div>
 </div>
 <!-- Breadcrumb End -->
-
 
 <!-- Shop Section Begin -->
 <section class="shop spad">
@@ -123,7 +128,7 @@
 
                             <div class="checkout__form__input">
                                 <h5 class="text-center">Цена</h5>
-                                <input type="text" th:field="${product.price}">
+                                <input type="number" name="price" th:field="${product.price}">
                             </div>
 
                             <div class="checkout__form__input">
@@ -134,37 +139,11 @@
                             <div class="text-center">
                                 <button type="submit" class="site-btn">Update</button>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-9 col-md-9">
-<!--                    <div class="row">-->
-<!--                        <div class="col-3">-->
-<!--                            <img th:src="@{/image/{id}(id=${product.previewImage.id})}" height="150px"-->
-<!--                                 th:alt="${product.productTitles['__${language.id}__']}">-->
-<!--                        </div>-->
-<!--                        <div class="col-2">-->
-<!--                            <div class="checkout__form__input">-->
-<!--                                <h5 class="text-center">Цена</h5>-->
-<!--                                <input type="text" th:field="${product.price}">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-4">-->
-<!--                            <div class="checkout__form__input">-->
-<!--                                <h5 class="text-center">Добавить фото</h5>-->
-<!--                                <input type="file" name="files" multiple="multiple">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-3">-->
-<!--                            <div class="text-center">-->
-<!--                                <button type="submit" class="site-btn">Update</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                     <div class="row">
                         <div class="col-12">
                             <h5 class="text-center">Название</h5>
@@ -186,6 +165,64 @@
                                     </textarea>
                                 </div>
                             </span>
+                        </div>
+                    </div>
+                    <div class="row pt-5" th:if="${outfits.size != 0}">
+                        <div class="col-lg-12 text-center">
+                            <div class="related__title">
+                                <h5>[[#{menu.outfits}]]</h5>
+                            </div>
+                        </div>
+                        <span th:each="outfit : ${outfits}">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                     <div class="product__item__pic set-bg ">
+                                        <div class="label new">New</div>
+                                            <a th:href="@{/admin/products/{id}(id=${outfit.id})}">
+                                                <img th:src="@{/image/{id}(id=${outfit.previewImage.id})}"
+                                                     th:alt="${outfit.productTitles['__${language.id}__']}">
+                                            </a>
+                                        </div>
+                                        <div class="product__item__text">
+                                        <h6>
+                                            <a th:href="@{/admin/products/{id}(id=${outfit.id})}"
+                                               th:text="${outfit.productTitles['__${language.id}__']}">title
+                                            </a>
+                                        </h6>
+                                        <div class="product__price" th:text="${outfit.price}">price</div>
+                                     </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h5 class="text-center">Обьеденить с товаром</h5>
+                            <div class="row">
+                                <span th:each="item : ${AllProducts}">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="product__item">
+                                             <div class="product__item__pic set-bg">
+                                                 <a th:href="@{/admin/products/{id}(id=${item.id})}">
+                                                     <img th:src="@{/image/{id}(id=${item.previewImage.id})}"
+                                                          th:alt="${product.productTitles['__${language.id}__']}"><br>
+                                                     <input type="checkbox" th:field="*{products}" name="products"
+                                                            th:value="${item.id}">
+                                                 </a>
+                                             </div>
+                                            <div class="product__item__text">
+                                                <h6>
+                                                    <a th:href="@{/admin/products/{id}(id=${item.id})}"
+                                                       th:text="${item.productTitles['__${language.id}__']}">title
+                                                    </a>
+                                                </h6>
+                                                <div class="product__price" th:text="${item.price}">price</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

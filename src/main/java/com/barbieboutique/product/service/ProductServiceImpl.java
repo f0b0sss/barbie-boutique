@@ -60,6 +60,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAllByProductsContaining(Product product) {
+        return productRepository.findAllByProductsContaining(product);
+    }
+
+    @Override
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -115,12 +120,42 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
+        BigDecimal currentPrice = getPrice(product.getId());
+
+        if (currentPrice != product.getPrice() && product.getProducts().isEmpty()) {
+            BigDecimal diff = currentPrice.subtract(product.getPrice());
+            updateParentProductsPrice(product, diff);
+        }
+
+        if (!product.getProducts().isEmpty()) {
+            totalProductsPrice(product);
+        }
+
         productRepository.save(product);
+    }
+
+    private void updateParentProductsPrice(Product product, BigDecimal diff) {
+        List<Product> outfits = productRepository.findAllByProductsContaining(product);
+
+        outfits.stream()
+                .forEach(o -> o.setPrice(o.getPrice().subtract(diff)));
+    }
+
+    private void totalProductsPrice(Product product) {
+        BigDecimal price = product.getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        product.setPrice(price);
     }
 
     @Override
     public Product getById(Long id) {
         return productRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public BigDecimal getPrice(Long id) {
+        return productRepository.getPrice(id);
     }
 
     @Override

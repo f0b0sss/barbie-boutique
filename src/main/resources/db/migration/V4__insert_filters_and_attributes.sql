@@ -21,7 +21,7 @@ VALUES (1), --DollSize     Curve
        (4), --Material     Sewn
        (5), --Material     Knitted
        (6); --DollSize     Petite
-ALTER SEQUENCE attribute_seq RESTART WITH 6;
+ALTER SEQUENCE attribute_seq RESTART WITH 7;
 
 INSERT INTO filter_attributes (filter_id, attribute_id)
 VALUES (1, 1),

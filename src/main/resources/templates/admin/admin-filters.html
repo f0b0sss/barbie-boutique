@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:insert="~{fragments/meta :: meta}"></th:block>
 
     <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Admin Filters</title>
-
 
 </head>
 <body>
 <div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
 
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="product__details__button"
+                     sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                    <a class="site-btn" th:href="@{/admin/filters/new-filter}">New Filter</a>
+                </div>
+            </div>
+        </div>
 
-<div sec:authorize="hasAnyAuthority('SUPERADMIN', 'MANAGER')">
-    <a th:href="@{/admin/new-filter}">New Filter</a>
-</div>
-
-
-<div th:each="filter : ${filters}">
-    <a th:href="@{/admin/filters/{id}(id=${filter.id})}">
-        <span th:text="*{filter.filterTitles['__${language.id}__']}">title</span>
-    </a>
-    <div>
-        <form th:method="DELETE" th:action="@{/admin/filters/{id}(id=${filter.id})}">
-            <input type="submit" value="Удалить Filter">
-        </form>
+        <div class="row">
+            <div class="col-4">
+                <div class="list-group" th:each="filter : ${filters}">
+                    <div class="row">
+                        <div class="col-10">
+                            <a th:href="@{/admin/filters/{id}(id=${filter.id})}"
+                               class="list-group-item list-group-item-action">
+                                <span th:text="*{filter.filterTitles['__${language.id}__']}">title</span>
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <form th:method="DELETE" th:action="@{/admin/filters/{id}(id=${filter.id})}">
+                                <input type="submit" value="X">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
+</section>
+<!-- Shop Section End -->
 
 <!-- Footer Begin -->
 <div th:insert="~{fragments/footer :: #footer-fragment}"></div>

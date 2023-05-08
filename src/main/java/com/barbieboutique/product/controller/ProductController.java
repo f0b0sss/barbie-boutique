@@ -105,7 +105,7 @@ public class ProductController {
 
         Language language = utils.getCurrentLanguage();
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int pageSize = size.orElse(8);
 
         List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
@@ -137,8 +137,10 @@ public class ProductController {
 
         List<Category> categories = product.getCategories().stream().toList();
         List<Filter> filters = filterService.getALL();
+        List<Product> outfits = productService.findAllByProductsContaining(product);
 
         model.addAttribute("product", product);
+        model.addAttribute("outfits", outfits);
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
         model.addAttribute("images",  product.getImages());

@@ -155,7 +155,6 @@ CREATE TABLE products
     discount         integer      NOT NULL,
     order_count      integer,
     price            numeric(38, 2),
-    type             varchar(255),
     preview_image_id bigint,
     PRIMARY KEY (id)
 );

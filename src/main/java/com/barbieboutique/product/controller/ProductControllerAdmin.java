@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,7 +109,7 @@ public class ProductControllerAdmin {
 
         Language language = utils.getCurrentLanguage();
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int pageSize = size.orElse(8);
 
         List<Category> categories = categoryService.getALL();
         List<Filter> filters = filterService.getALL();
@@ -141,6 +143,10 @@ public class ProductControllerAdmin {
         List<Filter> filters = filterService.getALL();
         Language language = utils.getCurrentLanguage();
 
+        List<Product> AllProducts = productService.findAll();
+        Collections.sort(AllProducts, Comparator.comparing(Product::getCreatedDate));
+
+        model.addAttribute("AllProducts", AllProducts);
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);
         model.addAttribute("filters", filters);
@@ -151,7 +157,6 @@ public class ProductControllerAdmin {
 
     @PostMapping
     public String addProduct(@ModelAttribute Product product, MultipartFile[] files) {
-
         productService.save(product, files);
 
         return "redirect:/admin/products";
@@ -165,7 +170,14 @@ public class ProductControllerAdmin {
         List<Filter> filters = filterService.getALL();
         List<Category> allCategories = categoryService.getALL();
 
+        List<Product> AllProducts = productService.findAll();
+        Collections.sort(AllProducts, Comparator.comparing(Product::getCreatedDate));
+
+        List<Product> outfits = productService.findAllByProductsContaining(product);
+
+        model.addAttribute("outfits", outfits);
         model.addAttribute("product", product);
+        model.addAttribute("AllProducts", AllProducts);
         model.addAttribute("allCategories", allCategories);
         model.addAttribute("images", product.getImages());
         model.addAttribute("filters", filters);

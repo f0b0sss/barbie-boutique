@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:lang="#{html.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!-- Include the default stylesheet -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.css">
+    <!-- Include plugin -->
+    <script src="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.js"></script>
+
     <th:block th:insert="~{fragments/head :: link}"></th:block>
     <title>Add Product</title>
 
@@ -15,7 +22,6 @@
 </head>
 <body>
 <div th:insert="~{fragments/admin-menu :: #admin-menu-fragment}"></div>
-
 
 
 <!-- Breadcrumb Begin -->
@@ -59,11 +65,20 @@
                                                     </div>
                                                     <div id="collapseOne" class="collapse show"
                                                          data-parent="#accordionExample">
-                                                        <input type="checkbox" name="categories"
-                                                               th:id="${parentCtegory.categoryTitles['__${language.id}__']}"
-                                                               th:field="*{categories}"
-                                                               th:value="${parentCtegory.id}">
-                                                         <span th:each="childCategory : ${categories}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li>
+                                                                    <label th:for="${parentCtegory.categoryTitles['__${language.id}__']}">
+                                                                        <input type="checkbox" name="categories"
+                                                                               th:id="${parentCtegory.categoryTitles['__${language.id}__']}"
+                                                                               th:field="*{categories}"
+                                                                               th:value="${parentCtegory.id}">
+                                                                        <span th:text="${parentCtegory.categoryTitles['__${language.id}__']}">title</span>
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <span th:each="childCategory : ${categories}">
                                                              <span class="checkmark"></span>
                                                              <span th:if="${childCategory.parentCategory == parentCtegory}">
                                                                 <div class="card-body">
@@ -103,7 +118,7 @@
 
                             <div class="checkout__form__input">
                                 <h5 class="text-center">Цена</h5>
-                                <input type="text" th:field="${product.price}">
+                                <input type="number" name="price" th:field="${product.price}">
                             </div>
 
                             <div class="checkout__form__input">
@@ -114,7 +129,6 @@
                             <div class="text-center">
                                 <button type="submit" class="site-btn">Создать</button>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -124,10 +138,10 @@
                         <div class="col-12">
                             <h5 class="text-center">Название</h5>
                             <span th:each="entry : ${product.productTitles.entrySet()}">
-                        <div class="checkout__form__input">
-                            <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"
-                                   th:placeholder="${entry.key.title}"/>
-                        </div>
+                            <div class="checkout__form__input">
+                                <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"
+                                       th:placeholder="${entry.key.title}"/>
+                            </div>
                     </span>
                         </div>
                     </div>
@@ -143,6 +157,34 @@
                             </span>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h5 class="text-center">Обьеденить с товаром</h5>
+                            <div class="row">
+                                <span th:each="item : ${AllProducts}">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="product__item">
+                                             <div class="product__item__pic set-bg">
+                                                 <a th:href="@{/admin/products/{id}(id=${item.id})}">
+                                                     <img th:src="@{/image/{id}(id=${item.previewImage.id})}"
+                                                          th:alt="${product.productTitles['__${language.id}__']}"><br>
+                                                     <input type="checkbox" th:field="*{products}" name="products" th:value="${item.id}">
+                                                 </a>
+                                             </div>
+                                            <div class="product__item__text">
+                                                <h6>
+                                                    <a th:href="@{/admin/products/{id}(id=${item.id})}"
+                                                       th:text="${item.productTitles['__${language.id}__']}">title
+                                                    </a>
+                                                </h6>
+                                                <div class="product__price" th:text="${item.price}">price</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -150,118 +192,6 @@
 </section>
 <!-- Shop Section End -->
 
-
-
-<!--<form th:method="POST" th:action="@{/admin/products}" th:object="${product}" enctype="multipart/form-data">-->
-<!--    <table align="center">-->
-<!--        <div th:each="entry : ${product.productTitles.entrySet()}">-->
-<!--            <div>-->
-<!--                <label th:for="*{productTitles['__${entry.key.id}__']}" th:text="${entry.key.title}">Language</label>-->
-<!--                <input type="text" th:field="*{productTitles['__${entry.key.id}__']}"/>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--            <div>Price</div>-->
-<!--            <input type="text" th:field="*{price}" id="price">-->
-<!--        </div>-->
-
-
-<!--        <div>-->
-<!--            <div>Images</div>-->
-<!--            <input type="file" name="files" multiple="multiple">-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--            <div>Category:</div>-->
-<!--            <div th:each="category : ${categories}">-->
-<!--                <input type="checkbox" th:field="*{categories}" name="category" th:value="${category.id}">-->
-<!--                <span th:text="${category.categoryTitles['__${language.id}__']}">title</span>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div>-->
-<!--            &lt;!&ndash;            <div th:each="filter : ${filters}">&ndash;&gt;-->
-<!--            &lt;!&ndash;                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <div th:each="attribute : ${filter.attributes}">&ndash;&gt;-->
-<!--            &lt;!&ndash;                    <input type="radio" th:field="${filters}" name="attribute" th:value="*{id}">&ndash;&gt;-->
-<!--            &lt;!&ndash;                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>&ndash;&gt;-->
-<!--            &lt;!&ndash;                </div>&ndash;&gt;-->
-<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-
-<!--            <div>-->
-<!--                <div>Filters:</div>-->
-<!--                <div th:each="filter : ${filters}">-->
-<!--                    <div th:text="${filter.filterTitles['__${language.id}__']}"></div>-->
-<!--                    <div th:each="attribute, stat : ${filter.attributes}">-->
-<!--                        <input type="checkbox" th:field="${product.attributes}" name="attribute"-->
-<!--                               th:value="${attribute.id}">-->
-<!--                        <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash;        <div>&ndash;&gt;-->
-<!--        &lt;!&ndash;            <div th:each="filter, stat : ${filters}">&ndash;&gt;-->
-<!--        &lt;!&ndash;                <div th:text="${filter.filterTitles['__${language.id}__']}"></div>&ndash;&gt;-->
-<!--        &lt;!&ndash;                <div th:each="attribute : ${filters['__${stat.index}__'].attributes}">&ndash;&gt;-->
-<!--        &lt;!&ndash;                    <input type="radio" th:field="${filters['__${stat.index}__'].attributes}" name="attribute" th:value="*{id}">&ndash;&gt;-->
-<!--        &lt;!&ndash;                    <span th:text="${attribute.attributeTitles['__${language.id}__']}">title</span>&ndash;&gt;-->
-<!--        &lt;!&ndash;                </div>&ndash;&gt;-->
-<!--        &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--        &lt;!&ndash;        </div>&ndash;&gt;-->
-
-
-<!--        <div>-->
-<!--            <input type="submit" value="Add"/>-->
-<!--        </div>-->
-
-<!--    </table>-->
-<!--</form>-->
-
-
-<!--<form th:method="POST" th:action="@{/products/new-product}" th:object="${productDTO}" enctype="multipart/form-data">-->
-<!--    <table align="center">-->
-<!--        <tr>-->
-<!--            <td>Title</td>-->
-<!--            <td><input type="text" th:field="*{title}" id="title"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>Price</td>-->
-<!--            <td><input type="text" th:field="*{price}" id="price"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>Image</td>-->
-<!--            <td><input type="file" name="images" multiple="multiple" id="file"></td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--            <td>Description</td>-->
-<!--            <td><input type="text" th:field="*{description}" id="description"></td>-->
-<!--        </tr>-->
-
-<!--        <tr th:each="category : ${categories}">-->
-<!--            <td>-->
-<!--                <label>-->
-<!--                    <input type="checkbox" th:field="*{categories}" name="category" th:value="${category.id}">-->
-<!--                    <label th:text="${category.title}"></label>-->
-<!--                </label>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>-->
-
-<!--            </td>-->
-
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <input type="submit" value="Add"/>-->
-<!--        </tr>-->
-
-<!--    </table>-->
-
-<!--</form>-->
 
 <!-- Footer Begin -->
 <div th:insert="~{fragments/footer :: #footer-fragment}"></div>
